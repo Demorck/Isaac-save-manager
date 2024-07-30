@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Navigation Tabs -->
+        <div class="bg-white shadow">
+            <div class="container mx-auto">
+                <div class="flex space-x-4">
+                    <button id="tab-menu" class="py-4 px-6 text-gray-600 hover:text-gray-800 focus:outline-none focus:text-blue-500">Menu</button>
+                    <button id="tab-achievements" class="py-4 px-6 text-gray-600 hover:text-gray-800 focus:outline-none focus:text-blue-500">Achievements</button>
+                    <button id="tab-marks" class="py-4 px-6 text-gray-600 hover:text-gray-800 focus:outline-none focus:text-blue-500">Marks</button>
+                    <button id="tab-items" class="py-4 px-6 text-gray-600 hover:text-gray-800 focus:outline-none focus:text-blue-500">Items</button>
+                    <button id="tab-challenges" class="py-4 px-6 text-gray-600 hover:text-gray-800 focus:outline-none focus:text-blue-500">Challenges</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab Content -->
+        <div class="flex-grow container mx-auto p-4">
+            <div id="content-menu" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-4">Contenu Onglet 1</h2>
+                <div class="wrapper flex flex-wrap">
+                    <button id="download-button">Download</button>
+                </div>
+            </div>
+            <div id="content-achievements" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-4 mr-5">Achievements</h2>
+                <button id="toggle-achievements" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Toggle all achievements</button>
+
+                <div class="wrapper flex flex-wrap"></div>
+            </div>
+            <div id="content-marks" class="tab-content flex flex-col hidden">
+                <div class="flex items-center">
+                    <h2 class="text-2xl font-bold mb-4 mr-5">Marks</h2>
+                    <button id="toggle-solo-marks" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Toggle all solo marks</button>
+                    <button id="toggle-online-marks" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 hidden">Toggle all online marks</button>
+                </div>
+                <div class="wrapper flex flex-wrap flex-col"></div>
+            </div>
+            <div id="content-items" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-4">Items</h2>
+                <div class="wrapper flex flex-wrap"></div>
+            </div>
+            <div id="content-challenges" class="tab-content hidden">
+                <h2 class="text-2xl font-bold mb-4">Challenges</h2>
+                <div class="wrapper flex flex-wrap flex-col"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('[id^="tab"]');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const target = this.id.replace('tab', 'content');
+                    
+                    tabs.forEach(t => t.classList.remove('text-blue-500', 'border-b-2', 'border-blue-500'));
+                    this.classList.add('text-blue-500', 'border-b-2', 'border-blue-500');
+                    
+                    contents.forEach(content => content.classList.add('hidden'));
+                    document.getElementById(target).classList.remove('hidden');
+                });
+            });
+
+            // Activer l'onglet par défaut
+            tabs[2].click();
+        });
+    </script>
+    <script type="module" src="./dist/Main.js"></script>
+</body>
+</html>
