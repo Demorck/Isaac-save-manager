@@ -19,9 +19,9 @@ export class Save extends Observable {
     private _challenges: Challenge[];
     private _version: Versions;
 
-    constructor(path: string) {
+    constructor() {
         super();
-        this._manager = new SaveManager(path);
+        this._manager = new SaveManager();
         this._characters = new Array(Constants.NUMBER_OF_CHARACTERS);
         this._achievements = new Array(Constants.NUMBER_OF_ACHIEVEMENTS);
         this._items = new Array(Constants.NUMBER_OF_ITEMS);
@@ -30,8 +30,12 @@ export class Save extends Observable {
 
     }
 
-    public async load(): Promise<void> {
-        await this._manager.load();
+    public async update(dataFile: Uint8Array): Promise<void> {
+        await this.load(dataFile);
+    }
+
+    public async load(dataFile: Uint8Array): Promise<void> {
+        await this._manager.load(dataFile);
 
         this.populateVersion();
         this.populateCharacters();
@@ -140,7 +144,6 @@ export class Save extends Observable {
                 this._manager.setMark(character.getID(), index, bitwised);
                 
             });
-            console.log(this._manager.getSpecificMark(character.getID()));
         });
         
         this._manager.updateChecksum();

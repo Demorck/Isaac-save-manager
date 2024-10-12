@@ -17,9 +17,8 @@ export class SaveManager {
     private _version: number;
     
 
-    constructor(path: string) {
-        path = "/assets/" + path;
-        this._path = path;
+    constructor() {
+        this._path = "";
         this._data = new Uint8Array();
         this._sectionOffsets = new Array<number>();
         this._achievements = new Array<number>();
@@ -27,7 +26,6 @@ export class SaveManager {
         this._challenges = new Array<number>();
         this._items = new Array<number>();
         this._version = 0;
-
     }
 
     public get achievements(): number[] {
@@ -58,11 +56,8 @@ export class SaveManager {
         return this._mark[charIndex];
     }
 
-    public async load() {
-        let response = await fetch(this._path);
-
-        let buffer = await response.arrayBuffer();
-        this._data = new Uint8Array(buffer);
+    public async load(dataFile: Uint8Array): Promise<void> {
+        this._data = dataFile;
         if (!this.testChecksum()) {
             throw new Error("Checksum failed");
         }

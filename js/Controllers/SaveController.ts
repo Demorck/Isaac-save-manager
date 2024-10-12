@@ -17,6 +17,7 @@ export class SaveController {
 
 
     private _downloadButton: HTMLButtonElement;
+    private _uploadButton: HTMLInputElement;
 
     constructor(save: Save, saveView: SaveView)
     {
@@ -29,6 +30,7 @@ export class SaveController {
         this._toggleOnlineMarks = document.getElementById("toggle-online-marks") as HTMLButtonElement;
         this._toggleAchievements = document.getElementById("toggle-achievements") as HTMLButtonElement;
         this._downloadButton = document.getElementById("download-button") as HTMLButtonElement;
+        this._uploadButton = document.getElementById("upload-button") as HTMLInputElement;
         
         save.addObserver(saveView);
         this.addEventListeners();
@@ -60,6 +62,10 @@ export class SaveController {
             let data = this._save.data;
             this.downloadFile(data, "save.dat");
         });
+
+        this._uploadButton.addEventListener("change", (event) => {
+            this.uploadData(event);
+        });
     }
 
     private cycleDifficulty(): void {
@@ -80,5 +86,25 @@ export class SaveController {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    }
+
+    private displayMenus() {
+        document.querySelectorAll('[id^="tab"]').forEach((element) => {
+            element.classList.remove("hidden");
+        });
+    }
+
+    private uploadData(event: Event) {
+        let target = event.target as HTMLInputElement;
+        let file = target.files![0];
+        let reader = new FileReader();
+        reader.onload = (event) => {
+            let result = event.target!.result as ArrayBuffer;
+            let data = new Uint8Array(result);
+            this._save.update(data).then(() => {
+                this.displayMenus();
+            });
+        };
+        reader.readAsArrayBuffer(file);
     }
 }
