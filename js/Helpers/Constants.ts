@@ -1,4 +1,5 @@
-import { Versions } from "./Enums/Versions";
+import { Versions } from "./Enums/Versions.js";
+import { Statistics_offset } from "./Statistics_offset.js";
 
 export class Constants {
     public static readonly SECTION_OFFSET: number = 0x14;
@@ -62,6 +63,11 @@ export class Constants {
     public static readonly HEADER_OFFSET: number = 0x10;
     public static readonly BASE_OFFSET: number = 0x2AE;
     // Theses offsets are 4 bytes long
-    public static readonly OFFSET_MOM_KILLS: number = 0x4;
-    public static readonly OFFSET_BROKEN_ROCKS: number = 0x8;
+
+    public static readonly DICTIONNARY_STATISTICS_OFFSET: Map<string, number> = new Map<string, number>([
+        ["momKills", Statistics_offset.MOM_KILLS],
+        ["brokenRocks", Statistics_offset.ROCKS_DESROYED],
+        
+
+    ]);
 }

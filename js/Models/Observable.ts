@@ -1,4 +1,4 @@
-import { Observer } from "../Views/Observer";
+import { Observer } from "../Views/Observer.js";
 
 export class Observable {
     private _observers: Observer[] = [];
