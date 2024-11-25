@@ -1,15 +1,15 @@
-import { Constants } from "../Helpers/Constants";
-import { Difficulty } from "../Helpers/Enums/Difficulty";
-import { EAchievements } from "../Helpers/Enums/EAchievements";
-import { ECharacters } from "../Helpers/Enums/ECharacters";
-import { Versions } from "../Helpers/Enums/Versions";
-import { Manipulation } from "../Helpers/Manipulation";
-import { Achievement } from "./Achievement";
-import { Challenge } from "./Challenge";
-import { Characters } from "./Characters";
-import { Item } from "./Item";
-import { Observable } from "./Observable";
-import { SaveManager } from "./SaveManager";
+import { Constants } from "../Helpers/Constants.js";
+import { Difficulty } from "../Helpers/Enums/Difficulty.js";
+import { EAchievements } from "../Helpers/Enums/EAchievements.js";
+import { ECharacters } from "../Helpers/Enums/ECharacters.js";
+import { Versions } from "../Helpers/Enums/Versions.js";
+import { Manipulation } from "../Helpers/Manipulation.js";
+import { Achievement } from "./Achievement.js";
+import { Challenge } from "./Challenge.js";
+import { Characters } from "./Characters.js";
+import { Item } from "./Item.js";
+import { Observable } from "./Observable.js";
+import { SaveManager } from "./SaveManager.js";
 
 export class Save extends Observable {
     private _manager: SaveManager;

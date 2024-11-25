@@ -1,8 +1,8 @@
-import { Constants } from "../Helpers/Constants";
-import { Difficulty } from "../Helpers/Enums/Difficulty";
-import { Versions } from "../Helpers/Enums/Versions";
-import { Save } from "../Models/Save";
-import { SaveView } from "../Views/SaveView";
+import { Constants } from "../Helpers/Constants.js";
+import { Difficulty } from "../Helpers/Enums/Difficulty.js";
+import { Versions } from "../Helpers/Enums/Versions.js";
+import { Save } from "../Models/Save.js";
+import { SaveView } from "../Views/SaveView.js";
 
 export class SaveController {
     private _save: Save;
