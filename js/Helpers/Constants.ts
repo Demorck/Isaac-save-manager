@@ -62,6 +62,9 @@ export class Constants {
     public static readonly VERSION_OFFSET: number = 0x18;
     public static readonly HEADER_OFFSET: number = 0x10;
     public static readonly BASE_OFFSET: number = 0x2AE;
+
+    public static readonly OFFSET_BESTIARY: number = 0x1617;
+
     // Theses offsets are 4 bytes long
 
     public static readonly DICTIONNARY_STATISTICS_OFFSET: Map<string, number> = new Map<string, number>([

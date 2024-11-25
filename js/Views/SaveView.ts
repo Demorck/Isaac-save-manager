@@ -149,4 +149,8 @@ export class SaveView implements Observer {
             wrapper?.appendChild(challengeElement);
         });
     }
+
+    private populateBestiary(data: any): void {
+
+    }
 }

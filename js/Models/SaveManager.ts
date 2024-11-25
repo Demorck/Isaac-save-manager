@@ -222,4 +222,28 @@ export class SaveManager {
         return items
     }
 
+    public getKills(): number[] {
+        let killsOffset = Constants.OFFSET_BESTIARY;
+        let offsetDif = 0x8;
+        let kills = new Array<number>(100);
+        for (let i = 0; i < 100; i++) {
+            killsOffset += offsetDif;
+            let int = Manipulation.getInt(this._data, killsOffset, 4);
+            kills[i] = int;
+        }
+
+        return kills
+    }
+
+    public log(): string {
+        let log = "";
+        // for (let i = 0; i < this._data.length; i++) {
+        //     log += this._data[i] + " ";
+        // }
+
+        log += this._sectionOffsets;
+
+        return log;
+    }
+
 }

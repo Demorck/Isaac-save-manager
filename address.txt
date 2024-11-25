@@ -1,0 +1,15 @@
+2D5 - 4o - Death
+2FD - 4o - Donation machine
+
+-------------
+Bestiaire:
+
+fbf - 4o - début death
+160F - 4o - début kills puis 1617 puis 161F etc
+2db0 - 4o - début hits
+3acf - 4o début encounters
+
+
+
+diff 17a1
+diff d1f

@@ -69,9 +69,7 @@ export class Save extends Observable {
         for (let i = 0; i < numberAchievement; i++) {
             this._achievements[i] = new Achievement(EAchievements.getString(i));
             let unlocked = this._manager.achievements[i] == 1;
-            this._achievements[i].setUnlocked(unlocked);
-            console.log(i, this._achievements[i]);
-            
+            this._achievements[i].setUnlocked(unlocked);            
         }
 
         
@@ -84,6 +82,11 @@ export class Save extends Observable {
             this._items[i] = new Item(i + 1);
             this._items[i].setSeen(unlocked);
         }
+
+        let a = this._manager.getKills();
+        console.log(this._manager.log());
+        
+
 
         this.notifyObservers({items: this._items});
     }
