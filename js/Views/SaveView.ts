@@ -8,18 +8,21 @@ import { Challenge } from "../Models/Challenge.js";
 import { Characters } from "../Models/Characters.js";
 import { Item } from "../Models/Item.js";
 import { Observer } from "./Observer.js";
+import { Entity } from "../Models/Entity.js";
 
 export class SaveView implements Observer {
     private _achievements: HTMLElement;
     private _mark: HTMLElement;
     private _challenges: HTMLElement;
     private _items: HTMLElement;
+    private _bestiary: HTMLElement;
 
     constructor() {
         this._achievements = document.getElementById("content-achievements")!;
         this._mark = document.getElementById("content-marks")!;
         this._items = document.getElementById("content-items")!;
         this._challenges = document.getElementById("content-challenges")!;
+        this._bestiary = document.getElementById("content-bestiary")!;
     }
 
     update(data: any) {
@@ -36,6 +39,10 @@ export class SaveView implements Observer {
         
         if (data.challenges) {
             this.populateChallenges(data);
+        }
+        
+        if (data.bestiary) {
+            this.populateBestiary(data);
         }
     }
 
@@ -77,8 +84,6 @@ export class SaveView implements Observer {
                 if (stringDifficulty == undefined)
                 {
                     console.log(difficulty, Marks[index], character);
-                    
-                    
                 }
                 markImage.src = "/assets/gfx/marks/" + stringDifficulty + "/" + Marks[index] + ".png";
                 markImage.classList.add("w-8", "h-8", "pixelated");
@@ -151,6 +156,36 @@ export class SaveView implements Observer {
     }
 
     private populateBestiary(data: any): void {
+        let wrapper = this._bestiary.querySelector(".wrapper");
+        wrapper!.innerHTML = "";        
+        data.bestiary.forEach((entity: Entity) => {
+            let entityElement = document.createElement("div");
+            entityElement.classList.add("flex", "flex-row", "items-center");
+            entityElement.classList.add("p-1");
+            entityElement.innerHTML = entity.getName();
 
+            let kills = document.createElement("div");
+            kills.classList.add("p-1");
+            kills.innerHTML = entity.getKills().toString();
+
+            let deaths = document.createElement("div");
+            deaths.classList.add("p-1");
+            deaths.innerHTML = entity.getDeaths().toString();
+
+            let hits = document.createElement("div");
+            hits.classList.add("p-1");
+            hits.innerHTML = entity.getHits().toString();
+
+            let encounter = document.createElement("div");
+            encounter.classList.add("p-1");
+            encounter.innerHTML = entity.getEncounter().toString();
+
+            entityElement.appendChild(kills);
+            entityElement.appendChild(deaths);
+            entityElement.appendChild(hits);
+            entityElement.appendChild(encounter);
+
+            wrapper?.appendChild(entityElement);
+        });
     }
 }

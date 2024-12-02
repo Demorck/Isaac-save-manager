@@ -9,17 +9,30 @@ export class Manipulation {
         }
     }
 
-    public static getInt(data: Uint8Array, offset: number, numberBytes: number = 2): number {
+    public static getInt(data: Uint8Array, offset: number, numberBytes: number = 2, log: boolean = false): number {
         let result: number = 0;
         for (let i = 0; i < numberBytes; i++) {
             result += data[offset + i] << i;
+            if (log) {
+                console.log(`Byte ${i}: ${data[offset + i].toString(16)}, Result: ${result.toString(16)}`);
+            }
         }
-
+        if (log) {
+            console.log(`Result: ${result}`);
+        }
         return result;
     }
 
     public static toUint32(data: Uint8Array, offset: number): number {
         return data[offset] | (data[offset + 1] << 8) | (data[offset + 2] << 16) | (data[offset + 3] << 24);
+    }
+
+    public static getUintArray(number: number): Uint8Array {
+        let result = new Uint8Array(4);
+        for (let i = 0; i < 4; i++) {
+            result[i] = this.rshift(number, i * 8) & 0xFF;
+        }
+        return result;
     }
 
     public static getSectionOffsets(data: Uint8Array): number[] {
@@ -43,11 +56,48 @@ export class Manipulation {
             }
 
             for (let j = 0; j < sectionData[2]; j++) {
-                offset += entryLens[i];
+                offset += entryLens[i];                
             }
+
+        }
+        
+        return resultsOffset;
+    }
+
+    public static getBestiaryOffsets(data: Uint8Array, sectionOffsets: number[]): number[] {
+        let offset = sectionOffsets[10];
+        let length = this.toUint32(data, offset - 8);        
+
+        let resultsOffset = new Array<number>(4).fill(0);
+
+        for (let i = 0; i < 4; i++) {
+            resultsOffset[i] = offset;
+            let length = this.toUint32(data, offset + 4);
+            offset += 0x8 + length * 2;
         }
 
         return resultsOffset;
+    }
+
+    public static setBestiaryOffsets(data: Uint8Array, sectionOffsets: number[], length: number): void {
+        let offset = sectionOffsets[10];
+        let lengthOffset = offset - 8;
+
+        let lengthArray = this.getUintArray(length);
+
+        for (let i = 0; i < 4; i++) {
+            data[lengthOffset + i] = lengthArray[i];
+        }
+    }
+
+    public static getBestiaryLengths(data: Uint8Array, bestiaryOffset: number[]): number[] {
+        let res = [];
+        for (let i = 0; i < bestiaryOffset.length; i++) {
+            let length = this.toUint32(data, bestiaryOffset[i] + 4);
+            res.push(length);
+        }   
+
+        return res;
     }
 
     public static calculateChecksum(data: Uint8Array, offset: number, length: number): number {

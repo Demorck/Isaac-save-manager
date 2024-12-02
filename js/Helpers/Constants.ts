@@ -1,11 +1,40 @@
+import { Entities } from "./Enums/IEntity.js";
 import { Versions } from "./Enums/Versions.js";
 import { Statistics_offset } from "./Statistics_offset.js";
 
 export class Constants {
     public static readonly SECTION_OFFSET: number = 0x14;
-    public static readonly ENTRY_LENS = [1, 4, 4, 1, 1, 1, 1, 4, 4, 1];
+    
+    /**
+     * Les entrées sont de tailles différentes.
+     * Dans la save, pour savoir où commence chaque section, on a une liste de 3 valeurs:
+        * - La première est l'index de la section
+        * - La deuxième est la taille de la section
+        * - La troisième est le nombre d'entrées dans la section
+     * Voici la liste des sections dans l'ordre:
+        * - Achievements
+        * - Stats + Marks + ?? + Stats online
+        * -  ???
+        * - Items
+        * - Mini-bosses 
+        * - Bosses
+        * - Challenges
+        * - Endings + misc ???
+        * - ??? (deux entrées)
+        * - Specials seeds
+
+     *
+     * Les données de ENTRY_LENS représentent la taille de chaque entrée dans chaque section.
+     * @public
+     * @static
+     * @readonly
+     * @type {{}}
+     */
+    public static readonly ENTRY_LENS = [1, 4, 4, 1, 1, 1, 1, 4, 4, 1, 546];
 
     public static readonly NUMBER_OF_CHARACTERS: number = 34;
+    public static readonly NUMBER_OF_ENTITIES: number = Object.keys(Entities).length;
+    public static readonly NUMBER_OF_ONLINE_SINS: number = 21;
     public static readonly NUMBER_OF_ACHIEVEMENTS: number = 637;
     public static readonly NUMBER_OF_ONLINE_ACHIEVEMENTS: number = 640;
     public static readonly NUMBER_OF_ITEMS: number = 732;
@@ -70,7 +99,8 @@ export class Constants {
     public static readonly DICTIONNARY_STATISTICS_OFFSET: Map<string, number> = new Map<string, number>([
         ["momKills", Statistics_offset.MOM_KILLS],
         ["brokenRocks", Statistics_offset.ROCKS_DESROYED],
-        
-
+        ["deaths", Statistics_offset.DEATHS],
+        ["shopkeeperKills", Statistics_offset.SHOPKEEPER_KILLS],
+        ["donationCoins", Statistics_offset.DONATION_COINS]
     ]);
 }

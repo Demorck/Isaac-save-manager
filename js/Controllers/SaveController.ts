@@ -15,6 +15,9 @@ export class SaveController {
     private _toggleAchievements: HTMLButtonElement;
     private _currentToggle: boolean;
 
+    private _unlockBestiary: HTMLButtonElement;
+
+    private _sins: HTMLButtonElement
 
     private _downloadButton: HTMLButtonElement;
     private _uploadButton: HTMLInputElement;
@@ -29,6 +32,8 @@ export class SaveController {
         this._toggleSoloMarks = document.getElementById("toggle-solo-marks") as HTMLButtonElement;
         this._toggleOnlineMarks = document.getElementById("toggle-online-marks") as HTMLButtonElement;
         this._toggleAchievements = document.getElementById("toggle-achievements") as HTMLButtonElement;
+        this._unlockBestiary = document.getElementById("unlock-bestiary") as HTMLButtonElement;
+        this._sins = document.getElementById("unlock-sins") as HTMLButtonElement;
         this._downloadButton = document.getElementById("download-button") as HTMLButtonElement;
         this._uploadButton = document.getElementById("upload-button") as HTMLInputElement;
         
@@ -56,6 +61,14 @@ export class SaveController {
         this._toggleAchievements.addEventListener("click", () => {
             this._save.toggleAchievements(this._currentToggle);
             this.cycleToggle();
+        });
+
+        this._unlockBestiary.addEventListener("click", () => {
+            this._save.unlockBestiary();
+        });
+
+        this._sins.addEventListener("click", () => {
+            this._save.unlockSins();
         });
 
         this._downloadButton.addEventListener("click", () => {

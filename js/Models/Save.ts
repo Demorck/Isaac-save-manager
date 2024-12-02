@@ -3,7 +3,8 @@ import { Difficulty } from "../Helpers/Enums/Difficulty.js";
 import { EAchievements } from "../Helpers/Enums/EAchievements.js";
 import { ECharacters } from "../Helpers/Enums/ECharacters.js";
 import { Versions } from "../Helpers/Enums/Versions.js";
-import { Manipulation } from "../Helpers/Manipulation.js";
+import { Entity } from "./Entity.js";
+import { jsonEntity, entitiesByIdAndVariant } from "../Helpers/Enums/IEntity.js";
 import { Achievement } from "./Achievement.js";
 import { Challenge } from "./Challenge.js";
 import { Characters } from "./Characters.js";
@@ -17,6 +18,7 @@ export class Save extends Observable {
     private _achievements: Achievement[];
     private _items: Item[];
     private _challenges: Challenge[];
+    private _entities: Entity[];
     private _version: Versions;
 
     constructor() {
@@ -26,6 +28,7 @@ export class Save extends Observable {
         this._achievements = new Array(Constants.NUMBER_OF_ACHIEVEMENTS);
         this._items = new Array(Constants.NUMBER_OF_ITEMS);
         this._challenges = new Array(Constants.NUMBER_OF_CHALLENGES);
+        this._entities = new Array(Constants.NUMBER_OF_ENTITIES);
         this._version = Versions.UNDEFINED;
 
     }
@@ -35,13 +38,18 @@ export class Save extends Observable {
     }
 
     public async load(dataFile: Uint8Array): Promise<void> {
-        await this._manager.load(dataFile);
+        try {
+            await this._manager.load(dataFile);
+        } catch (error) {
+            
+        }
 
         this.populateVersion();
         this.populateCharacters();
         this.populateAchievements();  
         this.populateItems();
         this.populateChallenges();
+        this.populateEntities();
     }
 
     private populateCharacters(): void {
@@ -83,11 +91,6 @@ export class Save extends Observable {
             this._items[i].setSeen(unlocked);
         }
 
-        let a = this._manager.getKills();
-        console.log(this._manager.log());
-        
-
-
         this.notifyObservers({items: this._items});
     }
 
@@ -99,6 +102,19 @@ export class Save extends Observable {
         }
 
         this.notifyObservers({challenges: this._challenges});
+    }
+
+    private populateEntities(): void {
+        for (let i = 0; i < Constants.NUMBER_OF_ENTITIES; i++) {
+            let entity = jsonEntity[i];
+            this._entities[i] = new Entity(entity.id, entity.name, entity.variant);
+            this._entities[i].setKills(this._manager.kills[i]);
+            this._entities[i].setDeaths(this._manager.deaths[i]);
+            this._entities[i].setHits(this._manager.hits[i]);
+            this._entities[i].setEncounter(this._manager.encounters[i]);
+        }
+
+        this.notifyObservers({bestiary: this._entities});
     }
 
     private populateVersion(): void {
@@ -163,6 +179,38 @@ export class Save extends Observable {
         this._manager.updateChecksum();
 
         this.notifyObservers({achievements: this._achievements});
+    }
+
+    public unlockSins(): void {
+        this._manager.unlockSins();
+        
+        this.notifyObservers({sins: true});
+    }
+
+    public unlockBestiary(): void {
+        this._entities.forEach((entity) => {
+            entity.setKills(1);
+            entity.setDeaths(1);
+            entity.setHits(1);
+            entity.setEncounter(1);
+
+            
+            let entityIndex = entitiesByIdAndVariant[entity.getId()]?.[entity.getVariant()];
+            
+            this._manager.setEntity(entityIndex, entity.getDeaths(), entity.getKills(), entity.getHits(), entity.getEncounter());
+        });
+
+
+        let death = this._manager.getLengthBestiary(this._manager.deaths);
+        let kills = this._manager.getLengthBestiary(this._manager.kills);
+        let hits = this._manager.getLengthBestiary(this._manager.hits);
+        let encounters = this._manager.getLengthBestiary(this._manager.encounters);
+        
+        this._manager.setBestiary(death, kills, hits, encounters);
+        
+        this._manager.updateChecksum();
+
+        this.notifyObservers({bestiary: this._entities});
     }
 
     public get data(): Uint8Array {
