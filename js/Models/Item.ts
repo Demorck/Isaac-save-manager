@@ -1,5 +1,4 @@
-import { Items } from "../Helpers/Enums/Items.js";
-import { Utils } from "../Helpers/Utils.js";
+import { Items } from "@/Helpers/Enums/Items";
 
 export class Item {
     private _id: number;

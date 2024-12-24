@@ -1,4 +1,4 @@
-import { Constants } from "./Constants.js";
+import { Constants } from "@/Helpers/Constants";
 
 export class Manipulation {
     public static rshift(value: number, shift: number): number {

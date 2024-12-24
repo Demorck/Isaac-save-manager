@@ -1,4 +1,4 @@
-import { EAchievements } from "../Helpers/Enums/EAchievements.js";
+import { EAchievements } from "@/Helpers/Enums/EAchievements";
 
 export class Achievement {
     private _achievement: EAchievements;

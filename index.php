@@ -1,3 +1,18 @@
+<?php
+// include/helpers/helper.php
+
+function getAssetPath($name) {
+    $manifestPath = __DIR__ . '/dist/manifest.json';
+    if (file_exists($manifestPath)) {
+        $manifest = json_decode(file_get_contents($manifestPath), true);
+        return ($manifest[$name] ?? $name);   
+    }
+
+    echo 'No manifest file found';
+    echo $manifestPath;
+    return '/dist/' . $name;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,6 +106,6 @@
             tabs[0].click();
         });
     </script>
-    <script type="module" src="./dist/Main.js"></script>
+    <script type="module" src="<?= getAssetPath("main.js") ?>"></script>
 </body>
 </html>

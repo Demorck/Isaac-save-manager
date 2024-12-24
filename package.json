@@ -1,0 +1,25 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Here the frontend of Isaaconnect available at https://isaaconnect.com.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "build:prod": "webpack --mode=production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "clean-webpack-plugin": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.11",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.7.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-manifest-plugin": "^5.0.0"
+  }
+}

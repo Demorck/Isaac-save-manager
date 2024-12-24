@@ -1,4 +1,4 @@
-import { Challenges } from "../Helpers/Enums/Challenges.js";
+import { Challenges } from "@/Helpers/Enums/Challenges";
 
 export class Challenge {
     private _name: string;

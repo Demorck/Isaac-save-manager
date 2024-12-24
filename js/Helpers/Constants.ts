@@ -1,6 +1,6 @@
-import { Entities } from "./Enums/IEntity.js";
-import { Versions } from "./Enums/Versions.js";
-import { Statistics_offset } from "./Statistics_offset.js";
+import { Entities } from "@/Helpers/Enums/IEntity";
+import { Versions } from "@/Helpers/Enums/Versions";
+import { Statistics_offset } from "@/Helpers/Statistics_offset";
 
 export class Constants {
     public static readonly SECTION_OFFSET: number = 0x14;

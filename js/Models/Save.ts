@@ -1,16 +1,16 @@
-import { Constants } from "../Helpers/Constants.js";
-import { Difficulty } from "../Helpers/Enums/Difficulty.js";
-import { EAchievements } from "../Helpers/Enums/EAchievements.js";
-import { ECharacters } from "../Helpers/Enums/ECharacters.js";
-import { Versions } from "../Helpers/Enums/Versions.js";
-import { Entity } from "./Entity.js";
-import { jsonEntity, entitiesByIdAndVariant } from "../Helpers/Enums/IEntity.js";
-import { Achievement } from "./Achievement.js";
-import { Challenge } from "./Challenge.js";
-import { Characters } from "./Characters.js";
-import { Item } from "./Item.js";
-import { Observable } from "./Observable.js";
-import { SaveManager } from "./SaveManager.js";
+import { Constants } from "@/Helpers/Constants";
+import { Difficulty } from "@/Helpers/Enums/Difficulty";
+import { EAchievements } from "@/Helpers/Enums/EAchievements";
+import { ECharacters } from "@/Helpers/Enums/ECharacters";
+import { Versions } from "@/Helpers/Enums/Versions";
+import { Entity } from "@/Models/Entity";
+import { jsonEntity, entitiesByIdAndVariant } from "@/Helpers/Enums/IEntity";
+import { Achievement } from "@/Models/Achievement";
+import { Challenge } from "@/Models/Challenge";
+import { Characters } from "@/Models/Characters";
+import { Item } from "@/Models/Item";
+import { Observable } from "@/Models/Observable";
+import { SaveManager } from "@/Models/SaveManager";
 
 export class Save extends Observable {
     private _manager: SaveManager;
@@ -188,6 +188,8 @@ export class Save extends Observable {
     }
 
     public unlockBestiary(): void {
+        let csv = "Monster name, Hits, Deaths, Kills, Encounters\n";
+        
         this._entities.forEach((entity) => {
             entity.setKills(1);
             entity.setDeaths(1);
@@ -196,9 +198,15 @@ export class Save extends Observable {
 
             
             let entityIndex = entitiesByIdAndVariant[entity.getId()]?.[entity.getVariant()];
+            csv += `${entity.getName()}, ${entity.getHits()}, ${entity.getDeaths()}, ${entity.getKills()}, ${entity.getEncounter()}\n`;
             
             this._manager.setEntity(entityIndex, entity.getDeaths(), entity.getKills(), entity.getHits(), entity.getEncounter());
         });
+
+        console.log(csv);
+        
+
+
 
 
         let death = this._manager.getLengthBestiary(this._manager.deaths);

@@ -1,5 +1,3 @@
-import { IEntity, findEntityById } from "../Helpers/Enums/IEntity.js";
-
 export class Entity {
     private _name: string;
     private _id: number;

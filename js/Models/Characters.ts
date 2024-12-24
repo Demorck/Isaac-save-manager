@@ -1,6 +1,6 @@
-import { Difficulty } from "../Helpers/Enums/Difficulty.js";
-import { ECharacters } from "../Helpers/Enums/ECharacters.js";
-import { Marks } from "../Helpers/Enums/Marks.js";
+import { Difficulty } from "@/Helpers/Enums/Difficulty";
+import { ECharacters } from "@/Helpers/Enums/ECharacters";
+import { Marks } from "@/Helpers/Enums/Marks";
 
 export class Characters {
     private _character: ECharacters;

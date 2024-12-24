@@ -1,6 +1,6 @@
-import { SaveController } from "./Controllers/SaveController.js";
-import { Save } from "./Models/Save.js";
-import { SaveView } from "./Views/SaveView.js";
+import { SaveController } from "@/Controllers/SaveController";
+import { Save } from "@/Models/Save";
+import { SaveView } from "@/Views/SaveView";
 
 document.addEventListener("DOMContentLoaded", function () {
     let save = new Save();

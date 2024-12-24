@@ -1,9 +1,9 @@
-import { Constants } from "../Helpers/Constants.js";
-import { Difficulty } from "../Helpers/Enums/Difficulty.js";
-import { ECharacters } from "../Helpers/Enums/ECharacters.js";
-import { jsonEntity, findEntityById, entitiesByIdAndVariant, Entities } from "../Helpers/Enums/IEntity.js";
-import { Marks } from "../Helpers/Enums/Marks.js";
-import { Manipulation } from "../Helpers/Manipulation.js";
+import { Constants } from "@/Helpers/Constants";
+import { Difficulty } from "@/Helpers/Enums/Difficulty";
+import { ECharacters } from "@/Helpers/Enums/ECharacters";
+import { jsonEntity, findEntityById, entitiesByIdAndVariant, Entities } from "@/Helpers/Enums/IEntity";
+import { Marks } from "@/Helpers/Enums/Marks";
+import { Manipulation } from "@/Helpers/Manipulation";
 
 export class SaveManager {
     private _data: Uint8Array;

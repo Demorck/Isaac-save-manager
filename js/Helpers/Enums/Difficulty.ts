@@ -1,5 +1,5 @@
-import { Constants } from "../Constants.js";
-import { Versions } from "./Versions.js";
+import { Constants } from "../Constants";
+import { Versions } from "./Versions";
 
 export enum Difficulty {
     NONE = 0,

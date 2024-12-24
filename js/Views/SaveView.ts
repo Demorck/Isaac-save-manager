@@ -1,14 +1,14 @@
-import { Constants } from "../Helpers/Constants.js";
-import { Difficulty } from "../Helpers/Enums/Difficulty.js";
-import { Marks } from "../Helpers/Enums/Marks.js";
-import { Versions } from "../Helpers/Enums/Versions.js";
-import { Utils } from "../Helpers/Utils.js";
-import { Achievement } from "../Models/Achievement.js";
-import { Challenge } from "../Models/Challenge.js";
-import { Characters } from "../Models/Characters.js";
-import { Item } from "../Models/Item.js";
-import { Observer } from "./Observer.js";
-import { Entity } from "../Models/Entity.js";
+import { Constants } from "@/Helpers/Constants";
+import { Difficulty } from "@/Helpers/Enums/Difficulty";
+import { Marks } from "@/Helpers/Enums/Marks";
+import { Versions } from "@/Helpers/Enums/Versions";
+import { Utils } from "@/Helpers/Utils";
+import { Achievement } from "@/Models/Achievement";
+import { Challenge } from "@/Models/Challenge";
+import { Characters } from "@/Models/Characters";
+import { Item } from "@/Models/Item";
+import { Observer } from "./Observer";
+import { Entity } from "@/Models/Entity";
 
 export class SaveView implements Observer {
     private _achievements: HTMLElement;
