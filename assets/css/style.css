@@ -1,3 +1,29 @@
+@font-face {
+    font-family: 'Upheaval';
+    src: url("/assets/font/upheavtt.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'isaac-game';
+    src: url("/assets/font/IsaacGame.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url("/assets/font/Montserrat.ttf") format("truetype");
+}
+
+
+body {
+    font-family: 'Montserrat';
+    font-size: 16px;
+    line-height: 1.6;
+    color: #fff;
+    background: url(/assets/cellar.jpg) repeat center center fixed;
+    margin: 0;
+    padding: 0;
+}
+
 .pixelated {
     image-rendering: pixelated;
 }

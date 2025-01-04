@@ -9,6 +9,7 @@ import { Characters } from "@/Models/Characters";
 import { Item } from "@/Models/Item";
 import { Observer } from "./Observer";
 import { Entity } from "@/Models/Entity";
+import { SaveController } from "@/Controllers/SaveController";
 
 export class SaveView implements Observer {
     private _achievements: HTMLElement;
@@ -16,13 +17,17 @@ export class SaveView implements Observer {
     private _challenges: HTMLElement;
     private _items: HTMLElement;
     private _bestiary: HTMLElement;
+    private _stats: HTMLElement;
+    private _controller: SaveController;
 
-    constructor() {
+    constructor(controller: SaveController) {
         this._achievements = document.getElementById("content-achievements")!;
         this._mark = document.getElementById("content-marks")!;
         this._items = document.getElementById("content-items")!;
         this._challenges = document.getElementById("content-challenges")!;
         this._bestiary = document.getElementById("content-bestiary")!;
+        this._stats = document.getElementById("content-stats")!;
+        this._controller = controller;
     }
 
     update(data: any) {
@@ -44,54 +49,119 @@ export class SaveView implements Observer {
         if (data.bestiary) {
             this.populateBestiary(data);
         }
+
+        if (data.stats) {
+            this.populateStats(data);
+        }
+
+        if (data.loading && !data.loaded) {
+            document.getElementById("loading")?.classList.remove("hidden");
+        }
+
+        if (!data.loading  && data.loaded) {
+            document.getElementById("loading")?.classList.add("hidden");
+        }
     }
 
     private populateItems(data: any) {
         let wrapper = this._items.querySelector(".wrapper");
         wrapper!.innerHTML = "";
-        data.items.forEach((item: Item) => {
+        console.log(data.items);
+        
+        let count = 0;
+        let currentRow = document.createElement("div");
+        currentRow.classList.add("flex", "flex-row", "flex-nowrap");
+
+        let getNewPage = (countPage: number) => {
+            let currentPage = document.createElement("div");
+            currentPage.classList.add("flex", "flex-1", "flex-col", "flex-wrap", "gap-1", "items-center");
+            let title = document.createElement("h2");
+            title.classList.add("text-2xl");
+            title.innerHTML = "Page " + countPage;
+            currentPage.appendChild(title);
+            return currentPage;
+        };
+
+        let getItemElement = (item: Item) => {
             let itemElement = document.createElement("div");
-            itemElement.classList.add("p-1");
+            itemElement.classList.add("flex-1", "border", "border-red", "rounded", "p-1", "cursor-pointer");
             let image = document.createElement("img");
+            image.loading = "lazy";
             image.src = "/assets/gfx/items/collectibles/" + Utils.numberWithLeadingZeros(item.getID()) + ".png";
             if (!item.isSeen()) {
                 image.classList.add("grayscale", "opacity-80");
+                itemElement.dataset.seen = "false";
+            } else {
+                itemElement.dataset.seen = "true";
             }
-            image.classList.add("w-8", "pixelated");
+            image.classList.add("w-16", "pixelated");
             itemElement.appendChild(image);
-            wrapper?.appendChild(itemElement);
+
+            itemElement.addEventListener("click", () => {
+                this._controller.toggleItem(item.getID(), itemElement.dataset.seen == "true");
+            });
+
+            return itemElement;
+        }
+
+        let countPage = 1;        
+        let currentPage = getNewPage(countPage);
+        data.items.forEach((item: Item) => {
+            if (item.getID() <= 0)
+                return;
+
+            let itemElement = getItemElement(item);
+            currentRow?.appendChild(itemElement);
+
+            count++;
+
+            if (count % 20 == 0) {
+                currentPage?.appendChild(currentRow);
+                currentRow = document.createElement("div");
+                currentRow.classList.add("flex", "flex-row", "flex-nowrap");
+            }
+
+            if (count % 120 == 0) {
+                wrapper?.appendChild(currentPage);
+                currentPage = getNewPage(++countPage);
+
+            }
         });
+
+        
+        wrapper?.appendChild(currentPage);
     }
 
     private populateCharacters(data: any): void {
         let wrapper = this._mark.querySelector(".wrapper");
         wrapper!.innerHTML = "";
-        data.characters.forEach((character: Characters) => {
-            let characterElement = document.createElement("div");
-            characterElement.classList.add("p-1", "flex", "flex-row", "items-center", "justify-evenly");
-            let image = document.createElement("img");
-            image.src = "/assets/gfx/characters/" + character.getName() + ".png";
-            characterElement.appendChild(image);
+
+        let getMarkElement = (charId: number, mark: number, difficulty: number, type: Versions) => {
+            let dom  = 
+            `<div class="p-1 cursor-pointer" data-player="${charId}" data-id="${mark}" data-difficulty="${difficulty}" data-type="${type}">
+                <img loading="lazy" src="/assets/gfx/marks/${(type == Versions.ONLINE ? "online_" : "")}${(difficulty == 0 ? "Normal" : Difficulty[difficulty])}/${Marks[mark]}.png" class="${difficulty == 0 ? "grayscale opacity-10 " : ""}w-8 h-8 pixelated">
+            </div>`;
+                        
+            return Utils.htmlToElement(dom);
+        }
+
+        let getCharacterElement = (character: Characters) => {
+            let char = `
+            <div class="p-1 flex flex-row items-center justify-evenly bg-[#555] rounded border border-red-500">
+                <img loading="lazy"  src="/assets/gfx/characters/${character.getName()}.png">
+            </div>`;
+            let characterElement = Utils.htmlToElement(char);
 
             let soloMarks = character.getSoloMarks();
             let soloContainer = document.createElement("div");
             soloContainer.classList.add("flex", "flex-row", "items-center");
             soloMarks.forEach((difficulty, index) => {
-                let markElement = document.createElement("div");
-                markElement.classList.add("p-1");
-                let markImage = document.createElement("img");
-                let stringDifficulty = (difficulty == 0 ? "Normal" : Difficulty[difficulty]);
-                if (stringDifficulty == undefined)
-                {
-                    console.log(difficulty, Marks[index], character);
-                }
-                markImage.src = "/assets/gfx/marks/" + stringDifficulty + "/" + Marks[index] + ".png";
-                markImage.classList.add("w-8", "h-8", "pixelated");
-                if (difficulty == 0)
-                    markImage.classList.add("grayscale", "opacity-10");
-                markElement.appendChild(markImage);
+                let markElement = getMarkElement(character.getID(), index, difficulty, Versions.REPENTANCE);
+                markElement.addEventListener("click", () => {
+                    this._controller.toggleMark(character.getID(), parseInt(markElement.dataset.id!), parseInt(markElement.dataset.difficulty!), parseInt(markElement.dataset.type!));
+                });
+
                 soloContainer.appendChild(markElement);
-                
                 characterElement.appendChild(soloContainer);
             });
 
@@ -100,27 +170,21 @@ export class SaveView implements Observer {
                 let onlineContainer = document.createElement("div");
                 onlineContainer.classList.add("flex", "flex-row", "items-center");
                 onlineMarks.forEach((difficulty, index) => {
-                    let markElement = document.createElement("div");
-                    markElement.classList.add("p-1");
-                    let markImage = document.createElement("img");
-                    let stringDifficulty = (difficulty == 0 ? "Normal" : Difficulty[difficulty]);
-                    if (stringDifficulty == undefined)
-                    {
-                        console.log(difficulty, Marks[index], character);
-                        
-                        
-                    }
-                    markImage.src = "/assets/gfx/marks/online_" + stringDifficulty + "/" + Marks[index] + ".png";
-                    markImage.classList.add("w-8", "h-8", "pixelated");
-                    if (difficulty == 0)
-                        markImage.classList.add("grayscale", "opacity-10");
-                    markElement.appendChild(markImage);
+                    let markElement = getMarkElement(character.getID(), index, difficulty, Versions.ONLINE);
+                    markElement.addEventListener("click", () => {
+                        this._controller.toggleMark(character.getID(), parseInt(markElement.dataset.id!), parseInt(markElement.dataset.difficulty!), parseInt(markElement.dataset.type!));
+                    });
+
                     onlineContainer.appendChild(markElement);
-                    
                     characterElement.appendChild(onlineContainer);
                 });
             }
 
+            return characterElement;
+        }
+
+        data.characters.forEach((character: Characters) => {
+            let characterElement = getCharacterElement(character);
             wrapper?.appendChild(characterElement);
         });
     }
@@ -128,64 +192,166 @@ export class SaveView implements Observer {
     private populateAchievements(data: any): void {    
         let wrapper = this._achievements.querySelector(".wrapper");
         wrapper!.innerHTML = "";   
+
+        let fragment = document.createDocumentFragment();
+
+        let getAchievementElement = (achievement: Achievement) => {
+            let dom = `<div class="p-1 achievements cursor-pointer" data-id="${achievement.getID()}" data-unlocked="${achievement.unlocked}">
+                            <img loading="lazy" src="/assets/gfx/achievements/${achievement.getID()}.png" class="${!achievement.unlocked ? "grayscale opacity-80 " : ""}w-16 h-16 pixelated">
+                        </div>`;
+            return Utils.htmlToElement(dom);
+        }
+
         data.achievements.forEach((achievement: Achievement) => {
-            
-            let achievementElement = document.createElement("div");
-            achievementElement.classList.add("p-1");
-            let image = document.createElement("img");
-            image.src = "/assets/gfx/achievements/" + achievement.getID() + ".png";
-            if (!achievement.unlocked) {
-                image.classList.add("grayscale", "opacity-80");
-            }
-            achievementElement.appendChild(image);
-            wrapper?.appendChild(achievementElement);
+            let achievementElement = getAchievementElement(achievement);
+            achievementElement.addEventListener("click", () => {
+                this._controller.toggleAchievement(achievement.getID(), achievement.unlocked);
+            });
+            fragment.appendChild(achievementElement);
         });
+    
+        wrapper?.appendChild(fragment);
     }
 
     private populateChallenges(data: any): void {
         let wrapper = this._challenges.querySelector(".wrapper");
         wrapper!.innerHTML = "";
-        data.challenges.forEach((challenge: Challenge) => {
-            let challengeElement = document.createElement("div");
-            challengeElement.classList.add("p-1");
-            challengeElement.innerHTML = challenge.getName();
-            if (challenge.isDone())
-                challengeElement.classList.add("line-through");
-            wrapper?.appendChild(challengeElement);
+
+        let challengeElement = (challenge: Challenge) => {
+            let dom = `<div class="p-1 text-l cursor-pointer ${challenge.isDone() ? "line-through" : ""}" data-id="${challenge.getID()}" data-done="${challenge.isDone()}">
+                            ${challenge.getName()}
+                        </div>`;
+            return Utils.htmlToElement(dom);
+        }
+
+        let dlcELement = (dlc: Versions) => {
+            let string: string;
+            let color: string;
+            switch (dlc) {
+                case Versions.REPENTANCE:
+                    string = "Repentance";
+                    color = "text-red-500";
+                    break;
+                case Versions.AFTERBIRTH_PLUS:
+                    string = "Afterbirth+";
+                    color = "text-green-500";
+                    break;
+                    
+                case Versions.AFTERBIRTH:
+                    string = "Afterbirth";
+                    color = "text-blue-500";
+                    break;
+                case Versions.REBIRTH:
+                    string = "Rebirth";
+                    color = "text-yellow-500";
+                    break;
+                default:
+                    string = "Undefined";
+                    color = "text-gray-500";
+                    break;
+            }
+
+            let dom = `<div class="p-1 flex flex-col items-center bg-[#555] rounded-xl sm:w-1/5" data-dlc="${dlc}">
+                            <h1 class="text-2xl font-bold ${color}">${string}</h1>
+                        </div><hr>`;
+            return Utils.htmlToElement(dom);
+        }
+        
+        let fragment = document.createElement("div");
+        fragment.classList.add("flex", "sm:flex-row", "justify-between", "gap-1");
+
+        let currentVersionID = Constants.VERSION_LOADED; // ?
+        let arrayElementDLC: HTMLElement[] = [];
+
+        for (let i = 1; i < currentVersionID; i++) {
+            let dlc = dlcELement(i);
+            arrayElementDLC.push(dlc);
+        }
+
+        let j = 0;
+        let max = Constants.CHALLENGES_ARRAY_DLC[j];
+        data.challenges.forEach((challenge: Challenge, index: number) => {
+            
+            let element = challengeElement(challenge);
+            element.addEventListener("click", () => {
+                this._controller.toggleChallenge(challenge.getID(), challenge.isDone());
+            });
+            console.log(j, index, max);
+            arrayElementDLC[j].appendChild(element);
+            
+
+            if (index == max - 1)
+            {
+                fragment.appendChild(arrayElementDLC[j]);
+                j++;
+                max += Constants.CHALLENGES_ARRAY_DLC[j];
+            }
         });
+
+        wrapper?.appendChild(fragment);
     }
 
     private populateBestiary(data: any): void {
         let wrapper = this._bestiary.querySelector(".wrapper");
-        wrapper!.innerHTML = "";        
-        data.bestiary.forEach((entity: Entity) => {
-            let entityElement = document.createElement("div");
-            entityElement.classList.add("flex", "flex-row", "items-center");
-            entityElement.classList.add("p-1");
-            entityElement.innerHTML = entity.getName();
+        wrapper!.innerHTML = "";       
+        
+        let fragment = document.createElement("div");
+        fragment.classList.add("flex", "flex-row", "flex-wrap", "flex-1", "justify-between", "gap-1", "items-center");
+        let currentRow = document.createElement("div");
+        currentRow.classList.add("flex", "flex-row", "flex-nowrap");
 
-            let kills = document.createElement("div");
-            kills.classList.add("p-1");
-            kills.innerHTML = entity.getKills().toString();
+        let getPageElement = (index: number) => {
+            let dom = `<div class="flex flex-col flex-wrap w-1/5 items-center gap-1">
+                            <h1 class="text-2xl">Page ${index}</h1>
+                        </div>`;
+            return Utils.htmlToElement(dom);
+        }
 
-            let deaths = document.createElement("div");
-            deaths.classList.add("p-1");
-            deaths.innerHTML = entity.getDeaths().toString();
+        let getEntityElement = (entity: Entity): HTMLElement => {
+            let dom = `<div class="items-center p-1 cursor-pointer" data-id="${entity.getId()}">
+                            <img loading="lazy" src="/assets/gfx/enemies/${entity.getName().replace(/ /g, "_")}.png" class=" w-16 pixelated">
+                        </div>`;
 
-            let hits = document.createElement("div");
-            hits.classList.add("p-1");
-            hits.innerHTML = entity.getHits().toString();
+                            // <div class="p-1">${entity.getName()}</div>
+                            // <div class="p-1">${entity.getKills()}</div>
+                            // <div class="p-1">${entity.getDeaths()}</div>
+                            // <div class="p-1">${entity.getHits()}</div>
+                            // <div class="p-1">${entity.getEncounter()}</div>
+            return Utils.htmlToElement(dom);
+        }
 
-            let encounter = document.createElement("div");
-            encounter.classList.add("p-1");
-            encounter.innerHTML = entity.getEncounter().toString();
+        let count = 0;
+        let countPage = 0;
+        let currentPage = getPageElement(++countPage);
+        data.bestiary.forEach((entity: Entity, index: number) => {
+            let entityElement = getEntityElement(entity);
+            currentRow.appendChild(entityElement);
 
-            entityElement.appendChild(kills);
-            entityElement.appendChild(deaths);
-            entityElement.appendChild(hits);
-            entityElement.appendChild(encounter);
+            count++;
 
-            wrapper?.appendChild(entityElement);
+            if ((count) % 4 == 0) {
+                currentPage?.appendChild(currentRow);
+                currentRow = document.createElement("div");
+                currentRow.classList.add("flex", "flex-row", "flex-nowrap");
+            }
+
+            if ((count) % 16 == 0) {
+                fragment?.appendChild(currentPage);
+                currentPage = getPageElement(++countPage);
+            }
+        });
+
+        wrapper?.appendChild(fragment);
+    }
+
+    private populateStats(data: any): void { 
+        data.stats.forEach((value: number, key: string) => {
+            let elements = this._stats.querySelector("span#" + key);
+            
+            if (!elements)
+                return;
+
+            elements.innerHTML = value.toString();            
         });
     }
 }

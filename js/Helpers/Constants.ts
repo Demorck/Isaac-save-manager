@@ -20,8 +20,9 @@ export class Constants {
         * - Bosses
         * - Challenges
         * - Endings + misc ???
-        * - ??? (deux entrées)
+        * - ???
         * - Specials seeds
+        * - Bestiaire
 
      *
      * Les données de ENTRY_LENS représentent la taille de chaque entrée dans chaque section.
@@ -41,6 +42,8 @@ export class Constants {
     public static readonly NUMBER_OF_MARKS: number = 12;
     public static readonly NUMBER_OF_CHALLENGES: number = 45;
     public static readonly NUMBER_OF_DIFFICULTY: number = 3;
+    public static readonly NUMBER_OF_ENDINGS: number = 23;
+    public static readonly CHALLENGES_ARRAY_DLC: number[] = [20, 10, 5, 10];
 
     public static VERSION_LOADED: Versions = Versions.UNDEFINED;
 
@@ -97,7 +100,7 @@ export class Constants {
     // Theses offsets are 4 bytes long
 
     public static readonly DICTIONNARY_STATISTICS_OFFSET: Map<string, number> = new Map<string, number>([
-        ["momKills", Statistics_offset.MOM_KILLS],
+        ["mom-kills", Statistics_offset.MOM_KILLS],
         ["brokenRocks", Statistics_offset.ROCKS_DESROYED],
         ["deaths", Statistics_offset.DEATHS],
         ["shopkeeperKills", Statistics_offset.SHOPKEEPER_KILLS],

@@ -22,6 +22,7 @@ export class SaveManager {
     private _hits: number[];
     private _encounters: number[];
     
+    private _stats: Map<string, number>;
 
     constructor() {
         this._data = new Uint8Array();
@@ -37,6 +38,8 @@ export class SaveManager {
         this._kills = new Array<number>();
         this._hits = new Array<number>();
         this._encounters = new Array<number>();
+
+        this._stats = new Map<string, number>();
 
         this._version = 0;
     }
@@ -81,6 +84,11 @@ export class SaveManager {
         return this._encounters;
     }
 
+    public get stats(): Map<string, number> {
+        return new Map(this._stats);
+    }
+
+
     public getSpecificMark(charIndex: number): number[] {
         return this._mark[charIndex];
     }
@@ -95,16 +103,15 @@ export class SaveManager {
 
         this._sectionOffsets = Manipulation.getSectionOffsets(this._data);
         this._bestiaryOffsets = Manipulation.getBestiaryOffsets(this._data, this._sectionOffsets);
-    
+        this._sectionOffsets.forEach(element => console.log(element.toString(16)));
+        
 
         this._achievements = this.getAchievements();
         this._mark = this.getMark();
         this._challenges = this.getChallenges();
         this._items = this.getItems();
         this._sins = this.getSins();  
-
-        console.log(this._sins);
-        
+        this._stats = this.getStats();        
         
         this._deaths = this.getDeaths();
         this._kills = this.getKills();
@@ -155,6 +162,17 @@ export class SaveManager {
         
         this._data[sinsOffset] = value;
         this._sins[index] = value;
+    }
+
+    private getStats(): Map<string, number> {
+        let statsOffset = this._sectionOffsets[1];
+        let stats = new Map<string, number>(Constants.DICTIONNARY_STATISTICS_OFFSET);
+        Constants.DICTIONNARY_STATISTICS_OFFSET.forEach((value, key) => {
+            let int = Manipulation.toUint32(this._data, statsOffset + value);
+            stats.set(key, int);
+        });
+
+        return stats;
     }
 
     public unlockSins(): void {
@@ -270,7 +288,7 @@ export class SaveManager {
     }
 
     private getChallenges(): number[] {
-        let challengesOffset = this._sectionOffsets[9];
+        let challengesOffset = this._sectionOffsets[6];
         let challenges = new Array<number>(Constants.NUMBER_OF_CHALLENGES);
         for (let i = 0; i < Constants.NUMBER_OF_CHALLENGES; i++) {
             challengesOffset++;
@@ -279,6 +297,12 @@ export class SaveManager {
         }
 
         return challenges
+    }
+
+    public setChallenges(index: number, done: boolean): void {
+        let challengesOffset = this._sectionOffsets[6];
+        this._data[challengesOffset + index] = done ? 1 : 0;
+        this._challenges[index] = done ? 1 : 0;
     }
 
     private getItems(): number[] {
@@ -291,6 +315,12 @@ export class SaveManager {
         }
 
         return items
+    }
+
+    public setItems(index: number, seen: boolean): void {
+        let itemsOffset = this._sectionOffsets[3];
+        this._data[itemsOffset + index] = seen ? 1 : 0;
+        this._achievements[index] = seen ? 1 : 0;
     }
 
     private getDeaths(): number[] {
@@ -394,11 +424,6 @@ export class SaveManager {
     public setBestiary(deaths: number, kills: number, hits: number, encounters: number): void {
 
         let bestiaryLength = deaths + kills + hits + encounters;
-
-        // this.setArrayBestiary(this._bestiaryOffsets[0], deaths, this._deaths, 4, this._bestiaryOffsets[1]);
-        // this.setArrayBestiary(this._bestiaryOffsets[1], kills, this._kills, 2, this._bestiaryOffsets[2]);
-        // this.setArrayBestiary(this._bestiaryOffsets[2], hits, this._hits, 3, this._bestiaryOffsets[3]);
-        // this.setArrayBestiary(this._bestiaryOffsets[3], encounters, this._encounters, 1, -4);
 
         let deaths_array = this.setArrayBestiary(this._deaths, 4);
         let kills_array = this.setArrayBestiary(this._kills, 2);

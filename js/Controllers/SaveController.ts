@@ -22,10 +22,10 @@ export class SaveController {
     private _downloadButton: HTMLButtonElement;
     private _uploadButton: HTMLInputElement;
 
-    constructor(save: Save, saveView: SaveView)
+    constructor(save: Save)
     {
         this._save = save;
-        this._saveView = saveView;
+        this._saveView = new SaveView(this);
         this._currentDifficulty = Difficulty.HARD;
         this._currentToggle = true;
 
@@ -37,7 +37,7 @@ export class SaveController {
         this._downloadButton = document.getElementById("download-button") as HTMLButtonElement;
         this._uploadButton = document.getElementById("upload-button") as HTMLInputElement;
         
-        save.addObserver(saveView);
+        save.addObserver(this._saveView);
         this.addEventListeners();
     }
 
@@ -45,6 +45,10 @@ export class SaveController {
         if (Constants.VERSION_LOADED == Versions.ONLINE) {
             this._toggleOnlineMarks.classList.remove("hidden");
         }
+
+        this.setupEventsForIndividuals(); 
+
+        document.querySelector('label[for="download-button"')?.classList.remove("hidden");
     }
 
     private addEventListeners(): void {
@@ -79,6 +83,54 @@ export class SaveController {
         this._uploadButton.addEventListener("change", (event) => {
             this.uploadData(event);
         });
+
+        
+
+        const tabs = document.querySelectorAll('.tab-button') as NodeListOf<HTMLElement>;
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                const targetId = tab.id.replace('tab', 'content');
+                const targetContent = document.getElementById(targetId);
+
+                // Gestion de l'apparence des onglets
+                tabs.forEach(t => t.classList.remove('text-white', 'border-b-2', 'border-white'));
+                tab.classList.add('text-white', 'border-b-2', 'border-white');
+
+                // Affichage/Masquage des contenus
+                contents.forEach(content => content.classList.add('hidden'));
+                targetContent?.classList.remove('hidden');
+
+                // Vérifier si le contenu a déjà été chargé
+                if (targetContent && !targetContent.dataset.loaded) {
+                    let tabName = targetId.replace('content-', '').toLowerCase();
+                    this._save.populateContent(tabName);
+                    targetContent.dataset.loaded = 'true'; // Marquez comme chargé
+                }
+
+                // Fermer le menu mobile si nécessaire
+                if (window.innerWidth < 640) {
+                    document.getElementById('mobile-menu')?.classList.add('hidden');
+                }
+            });
+        });
+
+        // Initialisation : Cliquez sur le premier onglet
+        tabs[0].click();
+    }
+
+    private setupEventsForIndividuals(): void {
+        let achievements = document.querySelectorAll('.achievements') as NodeListOf<HTMLElement>;
+        achievements.forEach((achievement: HTMLElement) => {
+            achievement.addEventListener("click", () => {
+                let unlocked = achievement.dataset.unlocked == "true";
+                this._save.toggleAchievement(parseInt(achievement.dataset.id!), unlocked);
+                console.log(achievement.dataset.id);
+                
+            });
+        });
+        
     }
 
     private cycleDifficulty(): void {
@@ -119,5 +171,22 @@ export class SaveController {
             });
         };
         reader.readAsArrayBuffer(file);
+    }
+
+    public toggleAchievement(id: number, unlocked: boolean): void {
+        this._save.toggleAchievement(id, !unlocked);
+    }
+
+    public toggleMark(charId: number, markId: number, difficulty: Difficulty, type: Versions): void {
+        let newDifficulty = (difficulty + 1) % 3;
+        this._save.toggleMark(charId, markId, newDifficulty, type);
+    }
+
+    public toggleItem(id: number, unlocked: boolean): void {
+        this._save.toggleItem(id, !unlocked);
+    }
+
+    public toggleChallenge(id: number, unlocked: boolean): void {
+        this._save.toggleChallenge(id, !unlocked);
     }
 }

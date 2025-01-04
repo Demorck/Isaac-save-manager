@@ -1,6 +1,7 @@
 import { Difficulty } from "@/Helpers/Enums/Difficulty";
 import { ECharacters } from "@/Helpers/Enums/ECharacters";
 import { Marks } from "@/Helpers/Enums/Marks";
+import { Versions } from "@/Helpers/Enums/Versions";
 
 export class Characters {
     private _character: ECharacters;
@@ -35,6 +36,17 @@ export class Characters {
 
     public getOnlineMark(mark: Marks): Difficulty {
         return this._onlineMarks.get(mark) ?? Difficulty.NONE;
+    }
+
+    public setMark(mark: Marks, difficulty: Difficulty, type: Versions): void {
+        if (type == Versions.ONLINE) {
+            this.setOnlineMark(mark, difficulty);
+        } else {
+            this.setSoloMark(mark, difficulty);
+        }
+
+        console.log(this);
+        
     }
 
     public getOnlineMarks(): Map<Marks, Difficulty> {

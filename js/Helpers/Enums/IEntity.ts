@@ -781,7 +781,7 @@ const jsonEntity = [
     },
     {
         "id": 78,
-        "name": "Mom&#039;s Heart",
+        "name": "Mom's Heart",
         "variant": 0
     },
     {
@@ -906,17 +906,17 @@ const jsonEntity = [
     },
     {
         "id": 92,
-        "name": "1/2 Heart",
+        "name": "Half Heart",
         "variant": 1
     },
     {
         "id": 93,
-        "name": "Mask + Heart",
+        "name": "Mask Heart",
         "variant": 0
     },
     {
         "id": 93,
-        "name": "Mask II + 1\/2 Heart",
+        "name": "Mask Heart II",
         "variant": 1
     },
     {
@@ -986,7 +986,7 @@ const jsonEntity = [
     },
     {
         "id": 202,
-        "name": "Cross Stone Shooter",
+        "name": "Cross Grimace",
         "variant": 10
     },
     {
@@ -1056,22 +1056,22 @@ const jsonEntity = [
     },
     {
         "id": 212,
-        "name": "Death&#039;s Head",
+        "name": "Death's Head",
         "variant": 0
     },
     {
         "id": 212,
-        "name": "Dank Death&#039;s Head",
+        "name": "Dank Death's Head",
         "variant": 1
     },
     {
         "id": 212,
-        "name": "Cursed Death&#039;s Head",
+        "name": "Cursed Death's Head",
         "variant": 2
     },
     {
         "id": 212,
-        "name": "Brimstone Death&#039;s Head",
+        "name": "Brimstone Death's Head",
         "variant": 3
     },
     {
@@ -1081,7 +1081,7 @@ const jsonEntity = [
     },
     {
         "id": 213,
-        "name": "Mom&#039;s Hand",
+        "name": "Mom's Hand",
         "variant": 0
     },
     {
@@ -1316,7 +1316,7 @@ const jsonEntity = [
     },
     {
         "id": 246,
-        "name": "Rag Man&#039;s Ragling",
+        "name": "Rag Man's Ragling",
         "variant": 1
     },
     {
@@ -1511,12 +1511,12 @@ const jsonEntity = [
     },
     {
         "id": 279,
-        "name": "Black Globin&#039;s Head",
+        "name": "Black Globin's Head",
         "variant": 0
     },
     {
         "id": 280,
-        "name": "Black Globin&#039;s Body",
+        "name": "Black Globin's Body",
         "variant": 0
     },
     {
@@ -1546,12 +1546,12 @@ const jsonEntity = [
     },
     {
         "id": 286,
-        "name": "Flesh Death&#039;s Head",
+        "name": "Flesh Death's Head",
         "variant": 0
     },
     {
         "id": 287,
-        "name": "Mom&#039;s Dead Hand",
+        "name": "Mom's Dead Hand",
         "variant": 0
     },
     {
@@ -2281,7 +2281,7 @@ const jsonEntity = [
     },
     {
         "id": 887,
-        "name": "Dusty Death&#039;s Head",
+        "name": "Dusty Death's Head",
         "variant": 0
     },
     {
@@ -2411,7 +2411,7 @@ const jsonEntity = [
     },
     {
         "id": 915,
-        "name": "Singe&#039;s Ball",
+        "name": "Singe's Ball",
         "variant": 1
     },
     {

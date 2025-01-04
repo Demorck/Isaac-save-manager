@@ -9,6 +9,9 @@ export class Entity {
 
 
     constructor(id: number, name: string, variant: number) {
+        if (name == "???")
+            name = "Blue Baby";
+        
         this._name = name;
         this._id = id;
         this._variant = variant;

@@ -4,6 +4,5 @@ import { SaveView } from "@/Views/SaveView";
 
 document.addEventListener("DOMContentLoaded", function () {
     let save = new Save();
-    let saveView = new SaveView();
-    let saveController = new SaveController(save, saveView);
+    let saveController = new SaveController(save);
 });

@@ -11,6 +11,7 @@ import { Characters } from "@/Models/Characters";
 import { Item } from "@/Models/Item";
 import { Observable } from "@/Models/Observable";
 import { SaveManager } from "@/Models/SaveManager";
+import { Marks } from "@/Helpers/Enums/Marks";
 
 export class Save extends Observable {
     private _manager: SaveManager;
@@ -20,6 +21,7 @@ export class Save extends Observable {
     private _challenges: Challenge[];
     private _entities: Entity[];
     private _version: Versions;
+    private _stats: Map<string, number>;
 
     constructor() {
         super();
@@ -29,6 +31,7 @@ export class Save extends Observable {
         this._items = new Array(Constants.NUMBER_OF_ITEMS);
         this._challenges = new Array(Constants.NUMBER_OF_CHALLENGES);
         this._entities = new Array(Constants.NUMBER_OF_ENTITIES);
+        this._stats = new Map();
         this._version = Versions.UNDEFINED;
 
     }
@@ -38,18 +41,46 @@ export class Save extends Observable {
     }
 
     public async load(dataFile: Uint8Array): Promise<void> {
+        this.notifyObservers({loading: true, loaded: false});
+
         try {
             await this._manager.load(dataFile);
         } catch (error) {
             
         }
 
-        this.populateVersion();
-        this.populateCharacters();
-        this.populateAchievements();  
-        this.populateItems();
-        this.populateChallenges();
-        this.populateEntities();
+        const populateTasks = [
+            this.populateVersion.bind(this),
+            this.populateCharacters.bind(this),
+            this.populateAchievements.bind(this),
+            this.populateItems.bind(this),
+            this.populateChallenges.bind(this),
+            this.populateEntities.bind(this),
+            this.populateStats.bind(this),
+        ];
+    
+        const runTasks = async (tasks: (() => void)[]) => {
+            if (tasks.length === 0) return;
+    
+            const task = tasks.shift();
+            task!();
+    
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            await runTasks(tasks);
+        };
+    
+        await runTasks([...populateTasks]);
+
+        this.notifyObservers({loading: false, loaded: true});
+    }
+
+    private async runTaskWithDelay(task: () => void): Promise<void> {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                task();
+                resolve();
+            }, 50); // Petit délai de 50 ms pour laisser respirer le navigateur
+        });
     }
 
     private populateCharacters(): void {
@@ -69,10 +100,10 @@ export class Save extends Observable {
             }
         }
 
-        this.notifyObservers({characters: this._characters});
+        // this.notifyObservers({characters: this._characters});
     }
 
-    private populateAchievements(): void {
+    private async populateAchievements(): Promise<void> {
         let numberAchievement = Constants.VERSION_LOADED == Versions.ONLINE ? Constants.NUMBER_OF_ONLINE_ACHIEVEMENTS : Constants.NUMBER_OF_ACHIEVEMENTS;
         for (let i = 0; i < numberAchievement; i++) {
             this._achievements[i] = new Achievement(EAchievements.getString(i));
@@ -81,7 +112,7 @@ export class Save extends Observable {
         }
 
         
-        this.notifyObservers({achievements: this._achievements});
+        // this.notifyObservers({achievements: this._achievements});
     }
 
     private populateItems(): void {
@@ -91,7 +122,7 @@ export class Save extends Observable {
             this._items[i].setSeen(unlocked);
         }
 
-        this.notifyObservers({items: this._items});
+        // this.notifyObservers({items: this._items});
     }
 
     private populateChallenges(): void {
@@ -101,7 +132,7 @@ export class Save extends Observable {
             this._challenges[i].setDone(done);
         }
 
-        this.notifyObservers({challenges: this._challenges});
+        // this.notifyObservers({challenges: this._challenges});
     }
 
     private populateEntities(): void {
@@ -114,7 +145,7 @@ export class Save extends Observable {
             this._entities[i].setEncounter(this._manager.encounters[i]);
         }
 
-        this.notifyObservers({bestiary: this._entities});
+        // this.notifyObservers({bestiary: this._entities});
     }
 
     private populateVersion(): void {
@@ -133,6 +164,12 @@ export class Save extends Observable {
 
         Constants.VERSION_LOADED = this._version;
         this.notifyObservers({version: this._version});
+    }
+
+    private populateStats(): void {
+        this._stats = this._manager.stats;
+        
+        this.notifyObservers({stats: this._stats});
     }
 
     public toggleSoloMarks(difficulty: Difficulty = Difficulty.HARD): void {
@@ -170,6 +207,19 @@ export class Save extends Observable {
         this.notifyObservers({characters: this._characters});
     }
 
+    public toggleMark(charId: number, markId: Marks, difficulty: Difficulty, type: Versions): void {
+        let character = this._characters[charId];
+        let mark = type == Versions.ONLINE ? character.getOnlineMarks().get(markId)! : character.getSoloMarks().get(markId)!;
+        let bitwised = type == Versions.ONLINE ? Difficulty.getBitwisedDifficulty(mark, difficulty) : Difficulty.getBitwisedDifficulty(difficulty, mark);
+
+        character.setMark(markId, difficulty, type);
+
+        this._manager.setMark(charId, markId, bitwised);
+        this._manager.updateChecksum();
+
+        this.notifyObservers({characters: this._characters});
+    }
+
     public toggleAchievements(toggle: boolean = true): void {
         this._achievements.forEach((achievement) => {
             achievement.setUnlocked(toggle);
@@ -181,15 +231,59 @@ export class Save extends Observable {
         this.notifyObservers({achievements: this._achievements});
     }
 
+    public toggleAchievement(id: number, unlocked: boolean): void {
+        this._achievements[id - 1].setUnlocked(unlocked);
+        this._manager.setAchievements(id, unlocked);
+        this._manager.updateChecksum();
+
+        this.notifyObservers({achievements: this._achievements});
+    }
+
+    public toggleItems(toggle: boolean = true): void {
+        this._items.forEach((item) => {
+            item.setSeen(toggle);
+            this._manager.setItems(item.getID(), toggle);
+        });
+
+        this._manager.updateChecksum();
+
+        this.notifyObservers({items: this._items});
+    }
+
+    public toggleItem(id: number, seen: boolean): void {
+        this._items[id - 1].setSeen(seen);
+        this._manager.setItems(id, seen);
+        this._manager.updateChecksum();
+
+        this.notifyObservers({items: this._items});
+    }
+
+    public toggleChallenges(toggle: boolean = true): void {
+        this._challenges.forEach((challenge) => {
+            challenge.setDone(toggle);
+            this._manager.setChallenges(challenge.getID(), toggle);
+        });
+
+        this._manager.updateChecksum();
+
+        this.notifyObservers({challenges: this._challenges});
+    }
+
+    public toggleChallenge(id: number, done: boolean): void {
+        this._challenges[id].setDone(done);
+        this._manager.setChallenges(id, done);
+        this._manager.updateChecksum();
+
+        this.notifyObservers({challenges: this._challenges});
+    }
+
     public unlockSins(): void {
         this._manager.unlockSins();
         
         this.notifyObservers({sins: true});
     }
 
-    public unlockBestiary(): void {
-        let csv = "Monster name, Hits, Deaths, Kills, Encounters\n";
-        
+    public unlockBestiary(): void {        
         this._entities.forEach((entity) => {
             entity.setKills(1);
             entity.setDeaths(1);
@@ -198,16 +292,8 @@ export class Save extends Observable {
 
             
             let entityIndex = entitiesByIdAndVariant[entity.getId()]?.[entity.getVariant()];
-            csv += `${entity.getName()}, ${entity.getHits()}, ${entity.getDeaths()}, ${entity.getKills()}, ${entity.getEncounter()}\n`;
-            
             this._manager.setEntity(entityIndex, entity.getDeaths(), entity.getKills(), entity.getHits(), entity.getEncounter());
         });
-
-        console.log(csv);
-        
-
-
-
 
         let death = this._manager.getLengthBestiary(this._manager.deaths);
         let kills = this._manager.getLengthBestiary(this._manager.kills);
@@ -223,5 +309,36 @@ export class Save extends Observable {
 
     public get data(): Uint8Array {
         return this._manager.data;
+    }
+
+    public populateContent(tab: string): void {
+        this.notifyObservers({loading: true, loaded: false});
+
+        switch (tab) {
+            case "marks":
+                this.notifyObservers({characters: this._characters});
+                break;
+            case "achievements":
+                this.notifyObservers({achievements: this._achievements});
+                break;
+            case "items":
+                this.notifyObservers({items: this._items});
+                break;
+            case "challenges":
+                this.notifyObservers({challenges: this._challenges});
+                break;
+            case "bestiary":
+                this.notifyObservers({bestiary: this._entities});
+                break;
+            case "stats":
+                this.notifyObservers({stats: this._stats});
+                break;
+            // case Tabs.OTHERS:
+            //     this.notifyObservers({sins: true});
+            default:
+                break
+        }
+
+        this.notifyObservers({loading: false, loaded: true});
     }
 }
