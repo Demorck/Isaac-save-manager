@@ -1,6 +1,8 @@
 export class Entity {
     private _name: string;
     private _id: number;
+    private _isBoss: boolean;
+    private _isSpecial: boolean
     private _variant: number;
     private _deaths: number;
     private _kills: number;
@@ -8,12 +10,14 @@ export class Entity {
     private _encounter: number;
 
 
-    constructor(id: number, name: string, variant: number) {
+    constructor(id: number, name: string, variant: number, isBoss: boolean, isSpecial: boolean) {
         if (name == "???")
             name = "Blue Baby";
         
         this._name = name;
         this._id = id;
+        this._isBoss = isBoss;
+        this._isSpecial = isSpecial;
         this._variant = variant;
         this._kills = 0;
         this._deaths = 0;
@@ -72,6 +76,14 @@ export class Entity {
         if (encounter == undefined)
             encounter = 0;
         this._encounter = encounter;
+    }
+
+    public isBoss(): boolean {
+        return this._isBoss;
+    }
+
+    public isSpecial(): boolean {
+        return this._isSpecial;
     }
 
 

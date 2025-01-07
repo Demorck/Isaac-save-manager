@@ -4,7 +4,7 @@ import { EAchievements } from "@/Helpers/Enums/EAchievements";
 import { ECharacters } from "@/Helpers/Enums/ECharacters";
 import { Versions } from "@/Helpers/Enums/Versions";
 import { Entity } from "@/Models/Entity";
-import { jsonEntity, entitiesByIdAndVariant } from "@/Helpers/Enums/IEntity";
+import { jsonEntity, entitiesByIdAndVariant, IEntity } from "@/Helpers/Enums/IEntity";
 import { Achievement } from "@/Models/Achievement";
 import { Challenge } from "@/Models/Challenge";
 import { Characters } from "@/Models/Characters";
@@ -137,8 +137,9 @@ export class Save extends Observable {
 
     private populateEntities(): void {
         for (let i = 0; i < Constants.NUMBER_OF_ENTITIES; i++) {
-            let entity = jsonEntity[i];
-            this._entities[i] = new Entity(entity.id, entity.name, entity.variant);
+            let entity = jsonEntity[i] as IEntity;
+            let special = entity.isSpecial ? true : false;
+            this._entities[i] = new Entity(entity.id, entity.name, entity.variant, entity.isBoss, special);
             this._entities[i].setKills(this._manager.kills[i]);
             this._entities[i].setDeaths(this._manager.deaths[i]);
             this._entities[i].setHits(this._manager.hits[i]);

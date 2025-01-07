@@ -128,7 +128,7 @@ export class SaveView implements Observer {
             }
         });
 
-        
+        currentPage?.appendChild(currentRow);
         wrapper?.appendChild(currentPage);
     }
 
@@ -320,11 +320,21 @@ export class SaveView implements Observer {
             return Utils.htmlToElement(dom);
         }
 
+        let event = (entity: Entity) => {
+            alert(entity.getName() + " " + entity.getId() + " " + entity.getKills() + " " + entity.getDeaths() + " " + entity.getHits() + " " + entity.getEncounter());
+        }
+
         let count = 0;
         let countPage = 0;
         let currentPage = getPageElement(++countPage);
-        data.bestiary.forEach((entity: Entity, index: number) => {
+
+        let nonBoss = data.bestiary.filter((entity: Entity) => !entity.isBoss() && !entity.isSpecial());
+        let boss = data.bestiary.filter((entity: Entity) => entity.isBoss() && !entity.isSpecial());
+
+
+        nonBoss.forEach((entity: Entity, index: number) => {
             let entityElement = getEntityElement(entity);
+            entityElement.addEventListener("click", () => event(entity));
             currentRow.appendChild(entityElement);
 
             count++;
@@ -336,6 +346,25 @@ export class SaveView implements Observer {
             }
 
             if ((count) % 16 == 0) {
+                fragment?.appendChild(currentPage);
+                currentPage = getPageElement(++countPage);
+            }
+        });
+
+        boss.forEach((entity: Entity, index: number) => {
+            let entityElement = getEntityElement(entity);
+            entityElement.addEventListener("click", () => event(entity));
+            currentRow.appendChild(entityElement);
+
+            count++;
+
+            if ((count) % 2 == 0) {
+                currentPage?.appendChild(currentRow);
+                currentRow = document.createElement("div");
+                currentRow.classList.add("flex", "flex-row", "flex-nowrap");
+            }
+
+            if ((count) % 4 == 0) {
                 fragment?.appendChild(currentPage);
                 currentPage = getPageElement(++countPage);
             }
