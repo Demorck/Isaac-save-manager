@@ -101,9 +101,9 @@ export class Constants {
 
     public static readonly DICTIONNARY_STATISTICS_OFFSET: Map<string, number> = new Map<string, number>([
         ["mom-kills", Statistics_offset.MOM_KILLS],
-        ["brokenRocks", Statistics_offset.ROCKS_DESROYED],
+        ["broken-rocks", Statistics_offset.ROCKS_DESROYED],
         ["deaths", Statistics_offset.DEATHS],
-        ["shopkeeperKills", Statistics_offset.SHOPKEEPER_KILLS],
-        ["donationCoins", Statistics_offset.DONATION_COINS]
+        ["shopkeeper-kills", Statistics_offset.SHOPKEEPER_KILLS],
+        ["donation-coins", Statistics_offset.DONATION_COINS]
     ]);
 }

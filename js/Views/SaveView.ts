@@ -1,15 +1,15 @@
-import { Constants } from "@/Helpers/Constants";
-import { Difficulty } from "@/Helpers/Enums/Difficulty";
-import { Marks } from "@/Helpers/Enums/Marks";
-import { Versions } from "@/Helpers/Enums/Versions";
-import { Utils } from "@/Helpers/Utils";
-import { Achievement } from "@/Models/Achievement";
-import { Challenge } from "@/Models/Challenge";
-import { Characters } from "@/Models/Characters";
-import { Item } from "@/Models/Item";
-import { Observer } from "./Observer";
-import { Entity } from "@/Models/Entity";
-import { SaveController } from "@/Controllers/SaveController";
+import {Constants} from "@/Helpers/Constants";
+import {Difficulty} from "@/Helpers/Enums/Difficulty";
+import {Marks} from "@/Helpers/Enums/Marks";
+import {Versions} from "@/Helpers/Enums/Versions";
+import {Utils} from "@/Helpers/Utils";
+import {Achievement} from "@/Models/Achievement";
+import {Challenge} from "@/Models/Challenge";
+import {Characters} from "@/Models/Characters";
+import {Item} from "@/Models/Item";
+import {Observer} from "./Observer";
+import {Entity} from "@/Models/Entity";
+import {SaveController} from "@/Controllers/SaveController";
 
 export class SaveView implements Observer {
     private _achievements: HTMLElement;
@@ -260,10 +260,9 @@ export class SaveView implements Observer {
         let fragment = document.createElement("div");
         fragment.classList.add("flex", "sm:flex-row", "justify-between", "gap-1");
 
-        let currentVersionID = Constants.VERSION_LOADED; // ?
+        let currentVersionID = Constants.VERSION_LOADED >= Versions.REPENTANCE ? Versions.REPENTANCE : Constants.VERSION_LOADED; // ?
         let arrayElementDLC: HTMLElement[] = [];
-
-        for (let i = 1; i < currentVersionID; i++) {
+        for (let i = 1; i <= currentVersionID; i++) {
             let dlc = dlcELement(i);
             arrayElementDLC.push(dlc);
         }

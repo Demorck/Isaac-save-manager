@@ -172,6 +172,7 @@ export class SaveManager {
             stats.set(key, int);
         });
 
+        console.log(stats);
         return stats;
     }
 

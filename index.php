@@ -119,6 +119,9 @@ function getAssetPath($name) {
                             <ul id="content-stats" class="list-disc list-inside">
                                 <li>Number of death: <span id="deaths">0</span></li>
                                 <li>Mom's Kills: <span id="mom-kills">0</span></li>
+                                <li>Number of rocks broken: <span id="broken-rocks">0</span></li>
+                                <li>Shopkeeper kills: <span id="shopkeeper-kills">0</span></li>
+                                <li>Coin in donation machine: <span id="donation-coins">0</span></li>
                             </ul>
                         </div>
                     </div>
@@ -141,6 +144,7 @@ function getAssetPath($name) {
             </div>
             <div id="content-items" class="tab-content hidden">
                 <h2 class="text-2xl font-bold mb-4">Items</h2>
+                <button id="unlock-items" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">See all items</button>
                 <div class="wrapper flex flex-col flex-wrap gap-4"></div>
             </div>
             <div id="content-challenges" class="tab-content hidden">

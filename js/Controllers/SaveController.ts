@@ -15,6 +15,9 @@ export class SaveController {
     private _toggleAchievements: HTMLButtonElement;
     private _currentToggle: boolean;
 
+    private _unlockItems: HTMLButtonElement;
+    private _currentToggleItems: boolean;
+
     private _unlockBestiary: HTMLButtonElement;
 
     private _sins: HTMLButtonElement
@@ -36,6 +39,9 @@ export class SaveController {
         this._sins = document.getElementById("unlock-sins") as HTMLButtonElement;
         this._downloadButton = document.getElementById("download-button") as HTMLButtonElement;
         this._uploadButton = document.getElementById("upload-button") as HTMLInputElement;
+
+        this._unlockItems = document.getElementById("unlock-items") as HTMLButtonElement;
+        this._currentToggleItems = true;
         
         save.addObserver(this._saveView);
         this.addEventListeners();
@@ -48,7 +54,7 @@ export class SaveController {
 
         this.setupEventsForIndividuals(); 
 
-        document.querySelector('label[for="download-button"')?.classList.remove("hidden");
+        document.querySelector('label[for="download-button"]')?.classList.remove("hidden");
     }
 
     private addEventListeners(): void {
@@ -74,6 +80,11 @@ export class SaveController {
         this._sins.addEventListener("click", () => {
             this._save.unlockSins();
         });
+
+        this._unlockItems.addEventListener("click", () => {
+            this._save.toggleItems(this._currentToggleItems);
+            this._currentToggleItems = !this._currentToggleItems;
+        })
 
         this._downloadButton.addEventListener("click", () => {
             let data = this._save.data;
@@ -171,6 +182,8 @@ export class SaveController {
             });
         };
         reader.readAsArrayBuffer(file);
+
+        this.update();
     }
 
     public toggleAchievement(id: number, unlocked: boolean): void {
