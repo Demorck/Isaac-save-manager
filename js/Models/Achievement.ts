@@ -1,4 +1,5 @@
 import { EAchievements } from "@/Helpers/Enums/EAchievements";
+import {Constants} from "@/Helpers/Constants";
 
 export class Achievement {
     private _achievement: EAchievements;
@@ -27,5 +28,9 @@ export class Achievement {
 
     public toString(): string {
         return this._achievement.toString();
+    }
+
+    public isOnline(): boolean {
+        return this.getID() > Constants.NUMBER_OF_ACHIEVEMENTS;
     }
 }

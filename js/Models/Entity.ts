@@ -87,4 +87,7 @@ export class Entity {
     }
 
 
+    isUnlocked() {
+        return this._kills > 0 || this._deaths > 0 || this._hits > 0 || this._encounter > 0;
+    }
 }

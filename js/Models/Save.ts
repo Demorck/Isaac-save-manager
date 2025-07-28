@@ -208,6 +208,20 @@ export class Save extends Observable {
         this.notifyObservers({characters: this._characters});
     }
 
+    public toggleCharacter(charId: number, difficulty: Difficulty): void {
+        let character = this._characters[charId];
+        let marks = character.getSoloMarks();
+        let onlineMarks = character.getOnlineMarks();
+        marks.forEach((_, index) => {
+            this.toggleMark(charId, index, difficulty, Versions.REPENTANCE);
+        })
+
+        onlineMarks.forEach((_, index) => {
+            this.toggleMark(charId, index, difficulty, Versions.ONLINE);
+        });
+    }
+
+
     public toggleMark(charId: number, markId: Marks, difficulty: Difficulty, type: Versions): void {
         let character = this._characters[charId];
         let mark = type == Versions.ONLINE ? character.getOnlineMarks().get(markId)! : character.getSoloMarks().get(markId)!;
@@ -286,11 +300,8 @@ export class Save extends Observable {
 
     public unlockBestiary(): void {        
         this._entities.forEach((entity) => {
-            entity.setKills(1);
-            entity.setDeaths(1);
-            entity.setHits(1);
-            entity.setEncounter(1);
-
+            if (!entity.isUnlocked())
+                entity.setEncounter(1);
             
             let entityIndex = entitiesByIdAndVariant[entity.getId()]?.[entity.getVariant()];
             this._manager.setEntity(entityIndex, entity.getDeaths(), entity.getKills(), entity.getHits(), entity.getEncounter());
@@ -303,6 +314,26 @@ export class Save extends Observable {
         
         this._manager.setBestiary(death, kills, hits, encounters);
         
+        this._manager.updateChecksum();
+
+        this.notifyObservers({bestiary: this._entities});
+    }
+
+    public updateEnemy(entityId: number, variant: number, kills: number, deaths: number, hits: number, encounter: number): void {
+        let entityIndex = entitiesByIdAndVariant[entityId]?.[variant];
+        if (entityIndex === undefined) {
+            console.error(`Entity with ID ${entityId} and variant ${variant} not found.`);
+            return;
+        }
+
+        let entity = this._entities[entityIndex];
+        entity.setKills(kills);
+        entity.setDeaths(deaths);
+        entity.setHits(hits);
+        entity.setEncounter(encounter);
+
+        // console.log(`Updating entity: ${entity.getName()} (ID: ${entityId}, Variant: ${variant}) with Kills: ${kills}, Deaths: ${deaths}, Hits: ${hits}, Encounter: ${encounter}`);
+        this._manager.setEntity(entityIndex, deaths, kills, hits, encounter);
         this._manager.updateChecksum();
 
         this.notifyObservers({bestiary: this._entities});
@@ -341,5 +372,60 @@ export class Save extends Observable {
         }
 
         this.notifyObservers({loading: false, loaded: true});
+    }
+
+    public async convert(): Promise<Uint8Array<ArrayBufferLike>> {
+        let new_save = new Save();
+        const response = await fetch("/assets/saves/deadgod_rep.dat");
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        await new_save.load(data);
+
+
+        this._achievements.forEach((achievement) => {
+            if (achievement.isOnline()) return;
+
+            let id = achievement.getID();
+            let unlocked = achievement.unlocked;
+            new_save.toggleAchievement(id, unlocked);
+        })
+
+        this._items.forEach((item) => {
+            let id = item.getID();
+            if (id == -1) return; // Skip the "No Item" case
+            let seen = item.isSeen();
+            console.log(`Converting item ID: ${id}, Seen: ${seen}`);
+            new_save.toggleItem(id, seen);
+        });
+
+        this._challenges.forEach((challenge) => {
+            let id = challenge.getID();
+            let done = challenge.isDone();
+            new_save.toggleChallenge(id, done);
+        });
+
+        this._characters.forEach((character) => {
+            let charId = character.getID();
+            character.getSoloMarks().forEach((difficulty, markId) => {
+                new_save.toggleMark(charId, markId, difficulty, Versions.REPENTANCE);
+            });
+        });
+
+        this._entities.forEach((entity) => {
+            let entityIndex = entitiesByIdAndVariant[entity.getId()]?.[entity.getVariant()];
+            if (entityIndex !== undefined) {
+                new_save.updateEnemy(entity.getId(), entity.getVariant(), entity.getKills(), entity.getDeaths(), entity.getHits(), entity.getEncounter());
+            } else {
+                console.warn(`Entity with ID ${entity.getId()} and variant ${entity.getVariant()} not found in the new save.`);
+            }
+        });
+
+        let offset = this._manager.get_section_offsets()
+        console.log(`Converting save data from offset ${offset[0].toString(16)} to ${offset[1].toString(16)}`);
+        let stats = this._manager.data.subarray(offset[0], offset[1]);
+        console.log(`Stats data length: ${stats.length.toString(16)}`);
+        new_save._manager.convertToRepentance(stats);
+
+        return new_save.data
     }
 }

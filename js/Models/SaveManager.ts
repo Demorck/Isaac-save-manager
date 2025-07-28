@@ -459,7 +459,18 @@ export class SaveManager {
         this._kills[id] = kills;
         this._deaths[id] = deaths;
         this._hits[id] = hits;
-        this._encounters[id] = encounter;        
+        this._encounters[id] = encounter;
+
+        this.saveBestiary();
+    }
+
+    public saveBestiary(): void {
+        let deaths = this.getLengthBestiary(this._deaths);
+        let kills = this.getLengthBestiary(this._kills);
+        let hits = this.getLengthBestiary(this._hits);
+        let encounters = this.getLengthBestiary(this._encounters);
+
+        this.setBestiary(deaths, kills, hits, encounters);
     }
 
     public getLengthBestiary(array: number[]): number {
@@ -470,5 +481,15 @@ export class SaveManager {
         }
 
         return length * 4;
+    }
+
+    public get_section_offsets(): number[] {
+        return [this._sectionOffsets[1], this._sectionOffsets[1] + 0x6C];
+    }
+
+    public convertToRepentance(data: Uint8Array) {
+        this._data.set(data, this._sectionOffsets[1]);
+
+        this.updateChecksum();
     }
 }
