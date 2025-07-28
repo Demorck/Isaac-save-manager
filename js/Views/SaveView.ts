@@ -139,7 +139,7 @@ export class SaveView implements Observer {
         let getMarkElement = (charId: number, mark: number, difficulty: number, type: Versions) => {
             let dom  = 
             `<div class="p-1 cursor-pointer" data-player="${charId}" data-id="${mark}" data-difficulty="${difficulty}" data-type="${type}">
-                <img loading="lazy" src="/assets/gfx/marks/${(type == Versions.ONLINE ? "online_" : "")}${(difficulty == 0 ? "Normal" : Difficulty[difficulty])}/${Marks[mark]}.png" class="${difficulty == 0 ? "invert " : ""}w-8 h-8 pixelated">
+                <img loading="lazy" src="/assets/gfx/marks/${(type == Versions.ONLINE ? "online_" : "")}${(difficulty == 0 ? "normal" : Difficulty[difficulty].toLowerCase())}/${Marks[mark]}.png" class="${difficulty == 0 ? "invert " : ""}w-8 h-8 pixelated">
             </div>`;
                         
             return Utils.htmlToElement(dom);
@@ -278,7 +278,7 @@ export class SaveView implements Observer {
             element.addEventListener("click", () => {
                 this._controller.toggleChallenge(challenge.getID(), challenge.isDone());
             });
-            console.log(j, index, max);
+            // console.log(j, index, max);
             arrayElementDLC[j].appendChild(element);
             
 

@@ -394,7 +394,6 @@ export class Save extends Observable {
             let id = item.getID();
             if (id == -1) return; // Skip the "No Item" case
             let seen = item.isSeen();
-            console.log(`Converting item ID: ${id}, Seen: ${seen}`);
             new_save.toggleItem(id, seen);
         });
 

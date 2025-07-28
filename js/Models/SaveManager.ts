@@ -103,7 +103,7 @@ export class SaveManager {
 
         this._sectionOffsets = Manipulation.getSectionOffsets(this._data);
         this._bestiaryOffsets = Manipulation.getBestiaryOffsets(this._data, this._sectionOffsets);
-        this._sectionOffsets.forEach(element => console.log(element.toString(16)));
+        // this._sectionOffsets.forEach(element => console.log(element.toString(16)));
         
 
         this._achievements = this.getAchievements();
@@ -172,7 +172,6 @@ export class SaveManager {
             stats.set(key, int);
         });
 
-        console.log(stats);
         return stats;
     }
 

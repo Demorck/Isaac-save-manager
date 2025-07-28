@@ -18,7 +18,8 @@ function getAssetPath($name) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TBOI Save Editor</title>
+    <meta name="description" content="The Binding of Isaac: Repentance and Repentance + Save Editor - Unlock achievements, marks, items, challenges, bestiary and more.">
+    <title>The Binding of Isaac : Repentance - Save Editor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -115,7 +116,7 @@ function getAssetPath($name) {
                             <button id="download-button"></button>
                             Export save file
                         </label>
-                        <label for="convert-button" class="border-2 border-solid border-gray-300 rounded-lg p-4 me-4 bg-blue-900 cursor-pointer hover:bg-blue-800 uppercase">
+                        <label for="convert-button" class="border-2 border-solid border-gray-300 rounded-lg p-4 me-4 bg-blue-900 cursor-pointer hover:bg-blue-800 uppercase hidden">
                             <button id="convert-button"></button>
                             Convert to Repentance
                         </label>
@@ -155,6 +156,9 @@ function getAssetPath($name) {
                                 <li>Unlock sins</li>
                                 <li>Unlock one thing instead of all</li>
                                 <li>Unlock only characters ?</li>
+                                <li>Change statistics</li>
+                                <li>Change the UI</li>
+                                <li>Feedback needed ! :) </li>
                             </ul>
                         </div>
                         <div class="flex-1 bg-red-900 border-2 border-solid border-gray-300 p-4 rounded-lg">
@@ -168,6 +172,11 @@ function getAssetPath($name) {
                                 <li>More is coming...</li>
                             </ul>
                         </div>
+                    </div>
+                    <div class="">
+                        Isaac save editor is an independent project and is not sponsored by, affiliated with or related to the creators or publishers of The Binding of Isaac.<br>
+                        Found how the save file works by projects on github except bestiary, sins, statistics and some others stuffs that I need to understand by myself.<br>
+                        The sprites come from the wiki <a href="https://bindingofisaacrebirth.wiki.gg/" target="_blank" class="text-blue-300 hover:underline">here</a> (btw, don't go on fandom).<br>
                     </div>
                 </div>
             </div>

@@ -58,10 +58,6 @@ export class SaveController {
     }
 
     public update() {
-        if (Constants.VERSION_LOADED == Versions.ONLINE) {
-            this._toggleOnlineMarks.classList.remove("hidden");
-        }
-
         this.setupEventsForIndividuals(); 
 
         document.querySelector('label[for="download-button"]')?.classList.remove("hidden");
@@ -126,7 +122,7 @@ export class SaveController {
                 return;
             }
 
-            console.log(kills);
+            // console.log(kills);
             this._save.updateEnemy(enemyId, enemyVariant, kills, deaths, hits, encounters);
             this._modalBestiary.classList.add('hidden');
         })
@@ -172,7 +168,7 @@ export class SaveController {
             achievement.addEventListener("click", () => {
                 let unlocked = achievement.dataset.unlocked == "true";
                 this._save.toggleAchievement(parseInt(achievement.dataset.id!), unlocked);
-                console.log(achievement.dataset.id);
+                // console.log(achievement.dataset.id);
                 
             });
         });
@@ -207,6 +203,7 @@ export class SaveController {
 
         if (Constants.VERSION_LOADED == Versions.ONLINE) {
             this._toggleOnlineMarks.classList.remove("hidden");
+            this._convertButton.parentElement!.classList.remove("hidden");
         }
     }
 
@@ -265,7 +262,6 @@ export class SaveController {
         a = this._modalBestiary.querySelector("#modal-enemy-encounters")! as HTMLInputElement;
         a.defaultValue = entity.getEncounter().toString();
 
-        console.log(a)
         this._modalBestiary.querySelectorAll("img")!.forEach((img: HTMLImageElement) => {
             img.src = `/assets/gfx/enemies/${entity.getName().replace(/ /g, "_")}.png`;
         })
