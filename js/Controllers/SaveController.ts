@@ -216,6 +216,10 @@ export class SaveController {
             let data = new Uint8Array(result);
             this._save.update(data).then(() => {
                 this.displayMenus();
+                let tabs = document.querySelectorAll('.tab-content') as NodeListOf<HTMLElement>;
+                tabs.forEach((tab) => {
+                    tab.dataset.loaded = ''; // Reset loaded state for all tabs
+                })
             });
         };
         reader.readAsArrayBuffer(file);
