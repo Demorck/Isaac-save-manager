@@ -204,6 +204,9 @@ export class SaveController {
         if (Constants.VERSION_LOADED == Versions.ONLINE) {
             this._toggleOnlineMarks.classList.remove("hidden");
             this._convertButton.parentElement!.classList.remove("hidden");
+        } else {
+            this._toggleOnlineMarks.classList.add("hidden");
+            this._convertButton.parentElement!.classList.add("hidden");
         }
     }
 
