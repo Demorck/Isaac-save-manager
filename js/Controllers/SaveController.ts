@@ -223,11 +223,13 @@ export class SaveController {
                 tabs.forEach((tab) => {
                     tab.dataset.loaded = ''; // Reset loaded state for all tabs
                 })
+
+                this.update();
             });
         };
         reader.readAsArrayBuffer(file);
 
-        this.update();
+
     }
 
     public toggleAchievement(id: number, unlocked: boolean): void {

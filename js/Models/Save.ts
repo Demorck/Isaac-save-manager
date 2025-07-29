@@ -46,7 +46,8 @@ export class Save extends Observable {
         try {
             await this._manager.load(dataFile);
         } catch (error) {
-            
+            this.notifyObservers({loading: false, loaded: true, error: "Invalid save file header! This save file is not compatible with the website."});
+            await Promise.reject(error);
         }
 
         const populateTasks = [

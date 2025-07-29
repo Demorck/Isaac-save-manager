@@ -97,9 +97,15 @@ export class SaveManager {
         this._data = dataFile;
         if (!this.testChecksum()) {
             console.log("Checksum is invalid, updating...");
-            
             this.updateChecksum();
         }
+
+        this._version = Manipulation.getInt(this._data, Constants.VERSION_OFFSET, 1);
+        let correct = Manipulation.is_correct_header(this._data, this._version);
+        if (!correct) {
+            throw new Error("Invalid save file header! This save file is not compatible with the website.");
+        }
+
 
         this._sectionOffsets = Manipulation.getSectionOffsets(this._data);
         this._bestiaryOffsets = Manipulation.getBestiaryOffsets(this._data, this._sectionOffsets);
@@ -118,7 +124,6 @@ export class SaveManager {
         this._hits = this.getHits();
         this._encounters = this.getEncouters();
 
-        this._version = Manipulation.getInt(this._data, Constants.VERSION_OFFSET, 1);
     }
 
     public testChecksum(data: Uint8Array = this._data): boolean {

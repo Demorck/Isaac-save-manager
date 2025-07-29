@@ -61,6 +61,16 @@ export class SaveView implements Observer {
         if (!data.loading  && data.loaded) {
             document.getElementById("loading")?.classList.add("hidden");
         }
+
+        if (data.error) {
+            let a = document.querySelector(".error")! as HTMLDivElement;
+            a.textContent = data.error;
+            a.classList.remove("hidden");
+        } else {
+            let a = document.querySelector(".error")! as HTMLDivElement;
+            a.textContent = "";
+            a.classList.add("hidden");
+        }
     }
 
     private populateItems(data: any) {
@@ -221,7 +231,7 @@ export class SaveView implements Observer {
         wrapper!.innerHTML = "";
 
         let challengeElement = (challenge: Challenge) => {
-            let dom = `<div class="p-1 text-l cursor-pointer ${challenge.isDone() ? "line-through" : ""}" data-id="${challenge.getID()}" data-done="${challenge.isDone()}">
+            let dom = `<div class="p-1 text-l text-center cursor-pointer ${challenge.isDone() ? "line-through" : ""}" data-id="${challenge.getID()}" data-done="${challenge.isDone()}">
                             ${challenge.getName()}
                         </div>`;
             return Utils.htmlToElement(dom);

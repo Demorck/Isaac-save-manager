@@ -1,4 +1,5 @@
-import { Constants } from "@/Helpers/Constants";
+import {Constants} from "@/Helpers/Constants";
+import {Versions} from "@/Helpers/Enums/Versions";
 
 export class Manipulation {
     public static rshift(value: number, shift: number): number {
@@ -130,5 +131,16 @@ export class Manipulation {
         let result = dataChecksum & maskedChecksum;
         
         return result === dataChecksum;
+    }
+
+    public static is_correct_header(data: Uint8Array, _version: Versions): boolean {
+        for (let i = 0; i < Constants.HEADER_LENGTH; i++) {
+            if (Manipulation.getInt(data, i, 1) != Constants.HEADER[i]) {
+                console.error(`Header mismatch at index ${i}: expected ${Constants.HEADER[i]}, got ${Manipulation.getInt(data, i, 1)}`);
+                return false;
+            }
+        }
+
+        return true;
     }
 }

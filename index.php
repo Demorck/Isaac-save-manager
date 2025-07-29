@@ -120,6 +120,10 @@ function getAssetPath($name) {
                             <button id="convert-button"></button>
                             Convert to Repentance
                         </label>
+
+                        <div class="error flex items-center font-extrabold text-red-500 hidden">
+
+                        </div>
                     </div>
                     <div class="flex-1 w-full border-2 border-solid border-gray-300 rounded-lg p-4 bg-blue-900">
                         <h3 class="text-2xl font-bold mb-4">Remember to always make a backup.</h3>
@@ -158,6 +162,7 @@ function getAssetPath($name) {
                                 <li>Unlock only characters ?</li>
                                 <li>Change statistics</li>
                                 <li>Change the UI</li>
+                                <li>AB+ support</li>
                                 <li>Feedback needed ! :) </li>
                             </ul>
                         </div>
