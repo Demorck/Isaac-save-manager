@@ -22,6 +22,7 @@ export class Save extends Observable {
     private _entities: Entity[];
     private _version: Versions;
     private _stats: Map<string, number>;
+    private _filename: string;
 
     constructor() {
         super();
@@ -33,7 +34,7 @@ export class Save extends Observable {
         this._entities = new Array(Constants.NUMBER_OF_ENTITIES);
         this._stats = new Map();
         this._version = Versions.UNDEFINED;
-
+        this._filename = "";
     }
 
     public async update(dataFile: Uint8Array): Promise<void> {
@@ -388,6 +389,7 @@ export class Save extends Observable {
 
             let id = achievement.getID();
             let unlocked = achievement.unlocked;
+
             new_save.toggleAchievement(id, unlocked);
         })
 
@@ -395,6 +397,7 @@ export class Save extends Observable {
             let id = item.getID();
             if (id == -1) return; // Skip the "No Item" case
             let seen = item.isSeen();
+
             new_save.toggleItem(id, seen);
         });
 
@@ -421,11 +424,19 @@ export class Save extends Observable {
         });
 
         let offset = this._manager.get_section_offsets()
-        console.log(`Converting save data from offset ${offset[0].toString(16)} to ${offset[1].toString(16)}`);
         let stats = this._manager.data.subarray(offset[0], offset[1]);
-        console.log(`Stats data length: ${stats.length.toString(16)}`);
         new_save._manager.convertToRepentance(stats);
+        this._filename.replace(/^rep\+persistentgamedata(\d+)\.dat$/, "rep_persistentgamedata$1.dat");
+
 
         return new_save.data
+    }
+
+    public set_filename(name: string) {
+        this._filename = name;
+    }
+
+    public get_filename() {
+        return this._filename;
     }
 }

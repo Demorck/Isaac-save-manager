@@ -94,12 +94,12 @@ export class SaveController {
 
         this._downloadButton.addEventListener("click", () => {
             let data = this._save.data;
-            this.downloadFile(data, "save.dat");
+            this.downloadFile(data, this._save.get_filename());
         });
 
         this._convertButton.addEventListener("click", async () => {
             let data = await this._save.convert();
-            this.downloadFile(data, "converted_save.dat");
+            this.downloadFile(data, this._save.get_filename());
         })
 
         this._uploadButton.addEventListener("change", (event) => {
@@ -217,7 +217,9 @@ export class SaveController {
         reader.onload = (event) => {
             let result = event.target!.result as ArrayBuffer;
             let data = new Uint8Array(result);
+            let name = file.name;
             this._save.update(data).then(() => {
+                this._save.set_filename(name);
                 this.displayMenus();
                 let tabs = document.querySelectorAll('.tab-content') as NodeListOf<HTMLElement>;
                 tabs.forEach((tab) => {

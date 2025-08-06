@@ -188,21 +188,24 @@ function getAssetPath($name) {
 
             <div id="content-achievements" class="tab-content hidden">
                 <h2 class="text-2xl font-bold mb-4 mr-5">Achievements</h2>
-                <button id="toggle-achievements" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Toggle all achievements</button>
-
+                <button id="toggle-achievements" class="border-2 border-solid border-gray-300 rounded-lg p-4 me-4 bg-blue-900 cursor-pointer hover:bg-blue-800">Toggle all achievements</button>
+                <p>
+                    When the game loads the savefile, it will check marks, endings and stats to unlock achievements.<br>
+                    For example, if you disable all achievements and you have the "Mom" ending, it will unlock corresponding achievements.<br>
+                </p>
                 <div class="wrapper flex flex-wrap"></div>
             </div>
             <div id="content-marks" class="tab-content flex flex-col hidden">
                 <div class="flex items-center">
                     <h2 class="text-2xl font-bold mb-4 mr-5">Marks</h2>
-                    <button id="toggle-solo-marks" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Toggle all solo marks</button>
-                    <button id="toggle-online-marks" class="hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Toggle all online marks</button>
+                    <button id="toggle-solo-marks" class="border-2 border-solid border-gray-300 rounded-lg p-4 me-4 bg-blue-900 cursor-pointer hover:bg-blue-800">Toggle all solo marks</button>
+                    <button id="toggle-online-marks" class="hidden border-2 border-solid border-gray-300 rounded-lg p-4 me-4 bg-blue-900 cursor-pointer hover:bg-blue-800">Toggle all online marks</button>
                 </div>
                 <div class="wrapper flex flex-wrap flex-col gap-4"></div>
             </div>
             <div id="content-items" class="tab-content hidden">
                 <h2 class="text-2xl font-bold mb-4">Items</h2>
-                <button id="unlock-items" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">See all items</button>
+                <button id="unlock-items" class="border-2 border-solid border-gray-300 rounded-lg p-4 me-4 bg-blue-900 cursor-pointer hover:bg-blue-800">See all items</button>
                 <div class="wrapper flex flex-col flex-wrap gap-4"></div>
             </div>
             <div id="content-challenges" class="tab-content hidden">
@@ -212,13 +215,13 @@ function getAssetPath($name) {
             
             <div id="content-bestiary" class="tab-content hidden">
                 <h2 class="text-2xl font-bold mb-4">Bestiary</h2>
-                <button id="unlock-bestiary" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Unlock Bestiary (set encounter to 1 if the enemy is locked)</button>
+                <button id="unlock-bestiary" class="border-2 border-solid border-gray-300 rounded-lg p-4 me-4 bg-blue-900 cursor-pointer hover:bg-blue-800">Unlock Bestiary (set encounter to 1 if the enemy is locked)</button>
                 <div class="wrapper flex flex-wrap flex-col"></div>
             </div>
 
             <div id="content-others" class="tab-content hidden">
                 <h2 class="text-2xl font-bold mb-4">Others</h2>
-                <button id="unlock-sins" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Sins</button>
+                <button id="unlock-sins" class="border-2 border-solid border-gray-300 rounded-lg p-4 me-4 bg-blue-900 cursor-pointer hover:bg-blue-800">Sins</button>
                     <div class="wrapper flex flex-wrap flex-col"></div>
             </div>
         </div>
