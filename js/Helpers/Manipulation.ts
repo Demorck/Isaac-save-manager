@@ -81,6 +81,7 @@ export class Manipulation {
     }
 
     public static setBestiaryOffsets(data: Uint8Array, sectionOffsets: number[], length: number): void {
+        console.log(sectionOffsets)
         let offset = sectionOffsets[10];
         let lengthOffset = offset - 8;
 

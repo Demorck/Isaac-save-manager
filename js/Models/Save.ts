@@ -378,7 +378,7 @@ export class Save extends Observable {
 
     public async convert(): Promise<Uint8Array<ArrayBufferLike>> {
         let new_save = new Save();
-        const response = await fetch("/assets/saves/deadgod_rep.dat");
+        const response = await fetch("/assets/saves/fresh_rep.dat");
         const arrayBuffer = await response.arrayBuffer();
         const data = new Uint8Array(arrayBuffer);
         await new_save.load(data);
@@ -426,7 +426,11 @@ export class Save extends Observable {
         let offset = this._manager.get_section_offsets()
         let stats = this._manager.data.subarray(offset[0], offset[1]);
         new_save._manager.convertToRepentance(stats);
-        this._filename.replace(/^rep\+persistentgamedata(\d+)\.dat$/, "rep_persistentgamedata$1.dat");
+        this._filename = this._filename.replace(
+            /rep\+persistentgamedata(\d+)(.*)\.dat$/,
+            "rep_persistentgamedata$1$2.dat"
+        );
+
 
 
         return new_save.data

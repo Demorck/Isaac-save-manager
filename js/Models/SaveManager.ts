@@ -447,7 +447,7 @@ export class SaveManager {
 
         this._data = new Uint8Array(tmpData);
 
-        Manipulation.setBestiaryOffsets(this._data, this._bestiaryOffsets, bestiaryLength);
+        Manipulation.setBestiaryOffsets(this._data, this._sectionOffsets, bestiaryLength);
     }
 
 
