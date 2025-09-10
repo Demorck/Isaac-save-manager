@@ -639,7 +639,7 @@ export enum EAchievements {
     "Play Online",
     "Win Online",
     "Win Online Daily",
-    "Internal Item Description"
+    "item Descriptions"
 }
 
 export namespace EAchievements {

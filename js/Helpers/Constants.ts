@@ -89,7 +89,7 @@ export class Constants {
     public static readonly CHECKSUM = 0xFEDCBA76;
 
     public static readonly LAST_VERSION: number = 0x7E;
-    public static readonly ONLINE_VERSION: number = 0x81;
+    public static readonly ONLINE_VERSION: number = 0x82;
 
     public static readonly VERSION_OFFSET: number = 0x18;
     public static readonly HEADER_OFFSET: number = 0x10;
