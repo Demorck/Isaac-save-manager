@@ -44,9 +44,6 @@ export class Characters {
         } else {
             this.setSoloMark(mark, difficulty);
         }
-
-        console.log(this);
-        
     }
 
     public getOnlineMarks(): Map<Marks, Difficulty> {

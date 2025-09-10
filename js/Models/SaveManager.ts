@@ -97,13 +97,19 @@ export class SaveManager {
         this._data = dataFile;
         if (!this.testChecksum()) {
             console.log("Checksum is invalid, updating...");
-            
             this.updateChecksum();
         }
 
+        this._version = Manipulation.getInt(this._data, Constants.VERSION_OFFSET, 1);
+        let correct = Manipulation.is_correct_header(this._data, this._version);
+        if (!correct) {
+            throw new Error("Invalid save file header! This save file is not compatible with the website.");
+        }
+
+
         this._sectionOffsets = Manipulation.getSectionOffsets(this._data);
         this._bestiaryOffsets = Manipulation.getBestiaryOffsets(this._data, this._sectionOffsets);
-        this._sectionOffsets.forEach(element => console.log(element.toString(16)));
+        // this._sectionOffsets.forEach(element => console.log(element.toString(16)));
         
 
         this._achievements = this.getAchievements();
@@ -118,7 +124,6 @@ export class SaveManager {
         this._hits = this.getHits();
         this._encounters = this.getEncouters();
 
-        this._version = Manipulation.getInt(this._data, Constants.VERSION_OFFSET, 1);
     }
 
     public testChecksum(data: Uint8Array = this._data): boolean {
@@ -172,7 +177,6 @@ export class SaveManager {
             stats.set(key, int);
         });
 
-        console.log(stats);
         return stats;
     }
 
@@ -443,7 +447,7 @@ export class SaveManager {
 
         this._data = new Uint8Array(tmpData);
 
-        Manipulation.setBestiaryOffsets(this._data, this._bestiaryOffsets, bestiaryLength);
+        Manipulation.setBestiaryOffsets(this._data, this._sectionOffsets, bestiaryLength);
     }
 
 
@@ -459,7 +463,18 @@ export class SaveManager {
         this._kills[id] = kills;
         this._deaths[id] = deaths;
         this._hits[id] = hits;
-        this._encounters[id] = encounter;        
+        this._encounters[id] = encounter;
+
+        this.saveBestiary();
+    }
+
+    public saveBestiary(): void {
+        let deaths = this.getLengthBestiary(this._deaths);
+        let kills = this.getLengthBestiary(this._kills);
+        let hits = this.getLengthBestiary(this._hits);
+        let encounters = this.getLengthBestiary(this._encounters);
+
+        this.setBestiary(deaths, kills, hits, encounters);
     }
 
     public getLengthBestiary(array: number[]): number {
@@ -470,5 +485,15 @@ export class SaveManager {
         }
 
         return length * 4;
+    }
+
+    public get_section_offsets(): number[] {
+        return [this._sectionOffsets[1], this._sectionOffsets[1] + 0x6C];
+    }
+
+    public convertToRepentance(data: Uint8Array) {
+        this._data.set(data, this._sectionOffsets[1]);
+
+        this.updateChecksum();
     }
 }

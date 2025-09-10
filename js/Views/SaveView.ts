@@ -61,6 +61,16 @@ export class SaveView implements Observer {
         if (!data.loading  && data.loaded) {
             document.getElementById("loading")?.classList.add("hidden");
         }
+
+        if (data.error) {
+            let a = document.querySelector(".error")! as HTMLDivElement;
+            a.textContent = data.error;
+            a.classList.remove("hidden");
+        } else {
+            let a = document.querySelector(".error")! as HTMLDivElement;
+            a.textContent = "";
+            a.classList.add("hidden");
+        }
     }
 
     private populateItems(data: any) {
@@ -70,13 +80,13 @@ export class SaveView implements Observer {
         
         let count = 0;
         let currentRow = document.createElement("div");
-        currentRow.classList.add("flex", "flex-row", "flex-nowrap");
+        currentRow.classList.add("flex", "flex-row", "flex-wrap", "sm:flex-nowrap");
 
         let getNewPage = (countPage: number) => {
             let currentPage = document.createElement("div");
-            currentPage.classList.add("flex", "flex-1", "flex-col", "flex-wrap", "gap-1", "items-center");
+            currentPage.classList.add("flex", "flex-1", "border", "flex-col", "rounded-3xl", "flex-wrap", "gap-1", "items-center");
             let title = document.createElement("h2");
-            title.classList.add("text-2xl");
+            title.classList.add("text-2xl", "font-[upheaval]");
             title.innerHTML = "Page " + countPage;
             currentPage.appendChild(title);
             return currentPage;
@@ -84,7 +94,7 @@ export class SaveView implements Observer {
 
         let getItemElement = (item: Item) => {
             let itemElement = document.createElement("div");
-            itemElement.classList.add("flex-1", "border", "border-red", "rounded", "p-1", "cursor-pointer");
+            itemElement.classList.add("sm:flex-1", "rounded", "p-1", "cursor-pointer");
             let image = document.createElement("img");
             image.loading = "lazy";
             image.src = "/assets/gfx/items/collectibles/" + Utils.numberWithLeadingZeros(item.getID()) + ".png";
@@ -118,7 +128,7 @@ export class SaveView implements Observer {
             if (count % 20 == 0) {
                 currentPage?.appendChild(currentRow);
                 currentRow = document.createElement("div");
-                currentRow.classList.add("flex", "flex-row", "flex-nowrap");
+                currentRow.classList.add("flex", "flex-row", "flex-wrap", "sm:flex-nowrap");
             }
 
             if (count % 120 == 0) {
@@ -139,7 +149,7 @@ export class SaveView implements Observer {
         let getMarkElement = (charId: number, mark: number, difficulty: number, type: Versions) => {
             let dom  = 
             `<div class="p-1 cursor-pointer" data-player="${charId}" data-id="${mark}" data-difficulty="${difficulty}" data-type="${type}">
-                <img loading="lazy" src="/assets/gfx/marks/${(type == Versions.ONLINE ? "online_" : "")}${(difficulty == 0 ? "Normal" : Difficulty[difficulty])}/${Marks[mark]}.png" class="${difficulty == 0 ? "grayscale opacity-10 " : ""}w-8 h-8 pixelated">
+                <img loading="lazy" src="/assets/gfx/marks/${(type == Versions.ONLINE ? "online_" : "")}${(difficulty == 0 ? "normal" : Difficulty[difficulty].toLowerCase())}/${Marks[mark]}.png" class="${difficulty == 0 ? "invert " : ""}w-8 h-8 pixelated">
             </div>`;
                         
             return Utils.htmlToElement(dom);
@@ -147,10 +157,13 @@ export class SaveView implements Observer {
 
         let getCharacterElement = (character: Characters) => {
             let char = `
-            <div class="p-1 flex flex-row items-center justify-evenly bg-[#555] rounded border border-red-500">
-                <img loading="lazy"  src="/assets/gfx/characters/${character.getName()}.png">
+            <div class="p-1 flex flex-col sm:flex-row items-center justify-evenly rounded-3xl border">
+                <img loading="lazy"  src="/assets/gfx/characters/${character.getName()}.png" style="filter: invert(100%)">
             </div>`;
             let characterElement = Utils.htmlToElement(char);
+            // characterElement.querySelector("img")?.addEventListener("click", () => {
+            //     this._controller.toggleCharacterMark(character.getID());
+            // })
 
             let soloMarks = character.getSoloMarks();
             let soloContainer = document.createElement("div");
@@ -218,7 +231,7 @@ export class SaveView implements Observer {
         wrapper!.innerHTML = "";
 
         let challengeElement = (challenge: Challenge) => {
-            let dom = `<div class="p-1 text-l cursor-pointer ${challenge.isDone() ? "line-through" : ""}" data-id="${challenge.getID()}" data-done="${challenge.isDone()}">
+            let dom = `<div class="p-1 text-l text-center cursor-pointer ${challenge.isDone() ? "line-through" : ""}" data-id="${challenge.getID()}" data-done="${challenge.isDone()}">
                             ${challenge.getName()}
                         </div>`;
             return Utils.htmlToElement(dom);
@@ -251,14 +264,14 @@ export class SaveView implements Observer {
                     break;
             }
 
-            let dom = `<div class="p-1 flex flex-col items-center bg-[#555] rounded-xl sm:w-1/5" data-dlc="${dlc}">
-                            <h1 class="text-2xl font-bold ${color}">${string}</h1>
+            let dom = `<div class="p-1 flex flex-col items-center rounded-3xl border sm:w-1/5" data-dlc="${dlc}">
+                            <h1 class="text-2xl font-bold font-[upheaval] ${color}">${string}</h1>
                         </div><hr>`;
             return Utils.htmlToElement(dom);
         }
         
         let fragment = document.createElement("div");
-        fragment.classList.add("flex", "sm:flex-row", "justify-between", "gap-1");
+        fragment.classList.add("flex", "sm:flex-row", "justify-between", "gap-1", "flex-col");
 
         let currentVersionID = Constants.VERSION_LOADED >= Versions.REPENTANCE ? Versions.REPENTANCE : Constants.VERSION_LOADED; // ?
         let arrayElementDLC: HTMLElement[] = [];
@@ -275,7 +288,7 @@ export class SaveView implements Observer {
             element.addEventListener("click", () => {
                 this._controller.toggleChallenge(challenge.getID(), challenge.isDone());
             });
-            console.log(j, index, max);
+            // console.log(j, index, max);
             arrayElementDLC[j].appendChild(element);
             
 
@@ -295,32 +308,33 @@ export class SaveView implements Observer {
         wrapper!.innerHTML = "";       
         
         let fragment = document.createElement("div");
-        fragment.classList.add("flex", "flex-row", "flex-wrap", "flex-1", "justify-between", "gap-1", "items-center");
+        fragment.classList.add("flex", "flex-row", "flex-wrap", "flex-1", "justify-center", "sm:justify-between", "gap-1", "items-stretch");
         let currentRow = document.createElement("div");
-        currentRow.classList.add("flex", "flex-row", "flex-nowrap");
+        currentRow.classList.add("flex", "flex-row", "flex-nowrap", "items-stretch");
+
+        let wrapper_row = document.createElement("div");
+        wrapper_row.classList.add("flex", "flex-col", "flex-nowrap", "items-stretch", "justify-evenly", "flex-1");
 
         let getPageElement = (index: number) => {
-            let dom = `<div class="flex flex-col flex-wrap w-1/5 items-center gap-1">
+            let dom = `<div class="flex flex-col rounded-3xl border flex-wrap sm:w-1/5 items-center gap-1 p-2">
                             <h1 class="text-2xl">Page ${index}</h1>
                         </div>`;
             return Utils.htmlToElement(dom);
         }
 
         let getEntityElement = (entity: Entity): HTMLElement => {
-            let dom = `<div class="items-center p-1 cursor-pointer" data-id="${entity.getId()}">
-                            <img loading="lazy" src="/assets/gfx/enemies/${entity.getName().replace(/ /g, "_")}.png" class=" w-16 pixelated">
-                        </div>`;
+            let width = "w-16";
+            if (entity.isBoss())
+                width = "w-24";
+            let dom = `<div class="items-center flex p-1 cursor-pointer" data-id="${entity.getId()}" data-variant="${entity.getVariant()}">
+                            <img loading="lazy" src="/assets/gfx/enemies/${entity.getName().replace(/ /g, "_")}.png" class="${width} pixelated">
+                            </div>`;
 
-                            // <div class="p-1">${entity.getName()}</div>
-                            // <div class="p-1">${entity.getKills()}</div>
-                            // <div class="p-1">${entity.getDeaths()}</div>
-                            // <div class="p-1">${entity.getHits()}</div>
-                            // <div class="p-1">${entity.getEncounter()}</div>
             return Utils.htmlToElement(dom);
         }
 
         let event = (entity: Entity) => {
-            alert(entity.getName() + " " + entity.getId() + " " + entity.getKills() + " " + entity.getDeaths() + " " + entity.getHits() + " " + entity.getEncounter());
+            this._controller.display_modal(entity);
         }
 
         let count = 0;
@@ -339,7 +353,8 @@ export class SaveView implements Observer {
             count++;
 
             if ((count) % 4 == 0) {
-                currentPage?.appendChild(currentRow);
+                wrapper_row.appendChild(currentRow);
+                currentPage?.appendChild(wrapper_row);
                 currentRow = document.createElement("div");
                 currentRow.classList.add("flex", "flex-row", "flex-nowrap");
             }
@@ -347,6 +362,8 @@ export class SaveView implements Observer {
             if ((count) % 16 == 0) {
                 fragment?.appendChild(currentPage);
                 currentPage = getPageElement(++countPage);
+                wrapper_row = document.createElement("div");
+                wrapper_row.classList.add("flex", "flex-col", "flex-nowrap", "items-stretch", "justify-evenly", "flex-1");
             }
         });
 
@@ -358,7 +375,8 @@ export class SaveView implements Observer {
             count++;
 
             if ((count) % 2 == 0) {
-                currentPage?.appendChild(currentRow);
+                wrapper_row.appendChild(currentRow);
+                currentPage?.appendChild(wrapper_row);
                 currentRow = document.createElement("div");
                 currentRow.classList.add("flex", "flex-row", "flex-nowrap");
             }
@@ -366,6 +384,8 @@ export class SaveView implements Observer {
             if ((count) % 4 == 0) {
                 fragment?.appendChild(currentPage);
                 currentPage = getPageElement(++countPage);
+                wrapper_row = document.createElement("div");
+                wrapper_row.classList.add("flex", "flex-col", "flex-nowrap", "items-stretch", "justify-evenly", "flex-1");
             }
         });
 

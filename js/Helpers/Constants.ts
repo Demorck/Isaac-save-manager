@@ -13,7 +13,7 @@ export class Constants {
         * - La troisième est le nombre d'entrées dans la section
      * Voici la liste des sections dans l'ordre:
         * - Achievements
-        * - Stats + Marks + ?? + Stats online
+        * - Stats + Marks + ?? + Marks + Stats bizarres + Sins/Stats online
         * -  ???
         * - Items
         * - Mini-bosses 
@@ -97,6 +97,9 @@ export class Constants {
 
     public static readonly OFFSET_BESTIARY: number = 0x1617;
 
+    public static readonly HEADER_LENGTH: number = 0xF;
+    public static readonly HEADER: Array<number> = [0x49, 0x53, 0x41, 0x41, 0x43, 0x4E, 0x47, 0x53, 0x41, 0x56, 0x45, 0x30, 0x39, 0x52, 0x20, 0x20];
+
     // Theses offsets are 4 bytes long
 
     public static readonly DICTIONNARY_STATISTICS_OFFSET: Map<string, number> = new Map<string, number>([
@@ -104,6 +107,11 @@ export class Constants {
         ["broken-rocks", Statistics_offset.ROCKS_DESROYED],
         ["deaths", Statistics_offset.DEATHS],
         ["shopkeeper-kills", Statistics_offset.SHOPKEEPER_KILLS],
-        ["donation-coins", Statistics_offset.DONATION_COINS]
+        ["donation-coins", Statistics_offset.DONATION_COINS],
+        ["eden-tokens", Statistics_offset.EDEN_TOKENS],
+        ["win-streak", Statistics_offset.WIN_STREAK__],
+        ["best-streak", Statistics_offset.BEST_STREAK],
+        ["donation", Statistics_offset.DONATION],
+        ["poop-destroyed", Statistics_offset.POOP_DESTROYED],
     ]);
 }

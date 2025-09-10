@@ -20,6 +20,7 @@ body {
     line-height: 1.6;
     color: #fff;
     background: url(/assets/cellar.jpg) repeat center center fixed;
+    backdrop-filter: blur(5px);
     margin: 0;
     padding: 0;
 }
