@@ -37,7 +37,7 @@ export class Constants {
     public static readonly NUMBER_OF_ENTITIES: number = Object.keys(Entities).length;
     public static readonly NUMBER_OF_ONLINE_SINS: number = 21;
     public static readonly NUMBER_OF_ACHIEVEMENTS: number = 637;
-    public static readonly NUMBER_OF_ONLINE_ACHIEVEMENTS: number = 640;
+    public static readonly NUMBER_OF_ONLINE_ACHIEVEMENTS: number = 641;
     public static readonly NUMBER_OF_ITEMS: number = 732;
     public static readonly NUMBER_OF_MARKS: number = 12;
     public static readonly NUMBER_OF_CHALLENGES: number = 45;

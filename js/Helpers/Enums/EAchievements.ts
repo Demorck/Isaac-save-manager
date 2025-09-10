@@ -638,7 +638,8 @@ export enum EAchievements {
     "Dead God",
     "Play Online",
     "Win Online",
-    "Win Online Daily"
+    "Win Online Daily",
+    "Internal Item Description"
 }
 
 export namespace EAchievements {
