@@ -129,8 +129,8 @@ function getAssetPath($name) {
                         <h3 class="text-2xl font-bold mb-4">Remember to always make a backup.</h3>
                         <p class="">Save local data are located:
                             <ul class="list-disc list-inside">
-                                <li>Windows: <code>&lt;Your Steam Directory&gt;/userdata/&lt;Your user id&gt;>/remote/250900/saves</code></li>
-                                <li>Linux: <code>~/.local/share/Steam/steamapps/compatdata/250900/pfx/drive_c/users/steamuser/Documents/My Games/Binding of Isaac Repentance</code></li>
+                                <li>Windows: <code>&lt;Your Steam Directory&gt;\userdata\&lt;Your user id&gt;>\remote\250900</code></li>
+                                <li>Linux: <code>~\.local\share\Steam\steamapps\compatdata\250900\pfx\drive_c\users\steamuser\Documents\My Games\Binding of Isaac Repentance</code></li>
                             </ul>
                         </p>
                         When you load a save file, it will be stored in your browser's local storage. It will not be uploaded to any server. <br>
