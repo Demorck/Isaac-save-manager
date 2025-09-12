@@ -1,5 +1,7 @@
+import {EAchievements} from "@/Helpers/Enums/EAchievements";
+
 export enum Challenges {
-    "Pitch Black" = 0,
+    "Pitch Black" = 1,
     "High Brow",
     "Head Trauma",
     "Darkness Falls",
@@ -65,5 +67,9 @@ export namespace Challenges {
 
     export function getID(name: string): number {
         return parseInt(Challenges[Challenges.getChallenge(name)]);
+    }
+
+    export function getString(index: number): string {
+        return Challenges.get(index).toString();
     }
 }

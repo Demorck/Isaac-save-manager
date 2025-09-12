@@ -287,7 +287,7 @@ export class Save extends Observable {
     }
 
     public toggleChallenge(id: number, done: boolean): void {
-        this._challenges[id].setDone(done);
+        this._challenges[id - 1].setDone(done);
         this._manager.setChallenges(id, done);
         this._manager.updateChecksum();
 
