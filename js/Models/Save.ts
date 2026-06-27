@@ -171,7 +171,7 @@ export class Save extends Observable {
 
     private populateStats(): void {
         this._stats = this._manager.stats;
-        
+
         this.notifyObservers({stats: this._stats});
     }
 
@@ -226,10 +226,11 @@ export class Save extends Observable {
 
     public toggleMark(charId: number, markId: Marks, difficulty: Difficulty, type: Versions): void {
         let character = this._characters[charId];
-        let mark = type == Versions.ONLINE ? character.getOnlineMarks().get(markId)! : character.getSoloMarks().get(markId)!;
-        let bitwised = type == Versions.ONLINE ? Difficulty.getBitwisedDifficulty(mark, difficulty) : Difficulty.getBitwisedDifficulty(difficulty, mark);
-
         character.setMark(markId, difficulty, type);
+
+        let soloMark = character.getSoloMark(markId);
+        let onlineMark = character.getOnlineMark(markId);
+        let bitwised = Difficulty.getBitwisedDifficulty(soloMark, onlineMark);
 
         this._manager.setMark(charId, markId, bitwised);
         this._manager.updateChecksum();

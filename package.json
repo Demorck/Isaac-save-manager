@@ -21,5 +21,8 @@
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-manifest-plugin": "^5.0.0"
+  },
+  "dependencies": {
+    "lit-html": "^3.3.2"
   }
 }

@@ -1,4 +1,6 @@
 import { Constants } from "@/Helpers/Constants";
+
+declare function showToast(message: string, type?: string, quick?: boolean): void;
 import { Difficulty } from "@/Helpers/Enums/Difficulty";
 import { Versions } from "@/Helpers/Enums/Versions";
 import { Save } from "@/Models/Save";
@@ -125,6 +127,7 @@ export class SaveController {
             // console.log(kills);
             this._save.updateEnemy(enemyId, enemyVariant, kills, deaths, hits, encounters);
             this._modalBestiary.classList.add('hidden');
+            showToast('Enemy updated', 'success', true);
         })
         
 
@@ -136,9 +139,8 @@ export class SaveController {
                 const targetId = tab.id.replace('tab', 'content');
                 const targetContent = document.getElementById(targetId);
 
-                // Gestion de l'apparence des onglets
-                tabs.forEach(t => t.classList.remove('text-white', 'border-b-2', 'border-white'));
-                tab.classList.add('text-white', 'border-b-2', 'border-white');
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
 
                 // Affichage/Masquage des contenus
                 contents.forEach(content => content.classList.add('hidden'));
@@ -193,6 +195,7 @@ export class SaveController {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        showToast('Save exported!');
     }
 
     private displayMenus() {
@@ -236,6 +239,7 @@ export class SaveController {
 
     public toggleAchievement(id: number, unlocked: boolean): void {
         this._save.toggleAchievement(id, !unlocked);
+        showToast(unlocked ? 'Achievement locked' : 'Achievement unlocked', 'success', true);
     }
 
     public toggleCharacterMark(charId: number): void {
@@ -245,14 +249,17 @@ export class SaveController {
     public toggleMark(charId: number, markId: number, difficulty: Difficulty, type: Versions): void {
         let newDifficulty = (difficulty + 1) % 3;
         this._save.toggleMark(charId, markId, newDifficulty, type);
+        showToast('Mark updated', 'success', true);
     }
 
     public toggleItem(id: number, unlocked: boolean): void {
         this._save.toggleItem(id, !unlocked);
+        showToast(unlocked ? 'Item unseen' : 'Item seen', 'success', true);
     }
 
     public toggleChallenge(id: number, unlocked: boolean): void {
         this._save.toggleChallenge(id, !unlocked);
+        showToast(unlocked ? 'Challenge reset' : 'Challenge completed', 'success', true);
     }
 
     public display_modal(entity: Entity) {

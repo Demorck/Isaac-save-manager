@@ -25,7 +25,7 @@ export class Manipulation {
     }
 
     public static toUint32(data: Uint8Array, offset: number): number {
-        return data[offset] | (data[offset + 1] << 8) | (data[offset + 2] << 16) | (data[offset + 3] << 24);
+        return (data[offset] | (data[offset + 1] << 8) | (data[offset + 2] << 16) | (data[offset + 3] << 24)) >>> 0;
     }
 
     public static getUintArray(number: number): Uint8Array {
@@ -81,7 +81,6 @@ export class Manipulation {
     }
 
     public static setBestiaryOffsets(data: Uint8Array, sectionOffsets: number[], length: number): void {
-        console.log(sectionOffsets)
         let offset = sectionOffsets[10];
         let lengthOffset = offset - 8;
 

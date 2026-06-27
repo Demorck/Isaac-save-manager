@@ -6,9 +6,9 @@ export enum Marks {
     "Blue Baby", 
     "The Lamb", 
     "Mega Satan", 
-    "Hush", 
-    "Greed", 
-    "Delirium", 
+    "Greed",
+    "Hush",
+    "Delirium",
     "Mother", 
     "The Beast"
 }

@@ -6,7 +6,6 @@ export class Challenge {
 
     constructor(id: number) {
         this._name = Challenges.getString(id)
-        console.log(this._name);
         this._done = false;
     }
 

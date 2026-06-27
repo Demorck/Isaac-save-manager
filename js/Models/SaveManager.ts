@@ -325,7 +325,7 @@ export class SaveManager {
     public setItems(index: number, seen: boolean): void {
         let itemsOffset = this._sectionOffsets[3];
         this._data[itemsOffset + index] = seen ? 1 : 0;
-        this._achievements[index] = seen ? 1 : 0;
+        this._items[index] = seen ? 1 : 0;
     }
 
     private getDeaths(): number[] {
@@ -376,10 +376,6 @@ export class SaveManager {
             bestiary[entityIndex] = value;   
 
         }
-
-        if (str !== "")
-            console.log(str);
-            
         
         return bestiary
     }

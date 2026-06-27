@@ -13,18 +13,249 @@
     src: url("/assets/font/Montserrat.ttf") format("truetype");
 }
 
-
-body {
-    font-family: 'Montserrat';
-    font-size: 16px;
-    line-height: 1.6;
-    color: #fff;
-    background: url(/assets/cellar.jpg) repeat center center fixed;
-    backdrop-filter: blur(5px);
-    margin: 0;
-    padding: 0;
+.pixelated {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }
 
-.pixelated {
-    image-rendering: pixelated;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animate-stagger {
+    opacity: 0;
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Drag & Drop */
+.drag-over {
+    border-color: var(--color-accent) !important;
+    background-color: color-mix(in srgb, var(--color-accent) 15%, transparent) !important;
+    transform: scale(1.02);
+}
+
+/* Toast Animation */
+@keyframes toastSlideIn {
+    0%   { transform: translateY(100%); opacity: 0; }
+    10%  { transform: translateY(-10%); opacity: 1; }
+    20%  { transform: translateY(0);    opacity: 1; }
+    80%  { transform: translateY(0);    opacity: 1; }
+    100% { transform: translateY(100%); opacity: 0; }
+}
+
+.toast {
+    animation: toastSlideIn 3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.toast-quick {
+    animation-duration: 1.5s;
+}
+
+.toast-success {
+    background: #166534;
+    border: 1px solid #15803d;
+    color: #fff;
+}
+
+.toast-error {
+    background: #7f1d1d;
+    border: 1px solid #991b1b;
+    color: #fff;
+}
+
+/* ========================
+            Themes
+   ========================
+*/
+
+:root, [data-theme="dark"] {
+    --color-bg:          #111111;
+    --color-surface:     #1c1c1c;
+    --color-surface-alt: #242424;
+    --color-border:      #2e2e2e;
+    --color-text:        #d4d4d4;
+    --color-muted:       #777777;
+    --color-accent:      #b91c1c;
+    --color-accent-dark: #991b1b;
+    --color-input-bg:    #0d0d0d;
+    --color-overlay:     rgba(0, 0, 0, 0.82);
+    --color-nav-bg:      #0f0f0f;
+    --color-bg-img-opacity: 0.08;
+}
+
+[data-theme="light"] {
+    --color-bg:          #f0ece8;
+    --color-surface:     #ffffff;
+    --color-surface-alt: #f5f2ef;
+    --color-border:      #d4cdc7;
+    --color-text:        #1a1a1a;
+    --color-muted:       #888888;
+    --color-accent:      #b91c1c;
+    --color-accent-dark: #991b1b;
+    --color-input-bg:    #faf9f8;
+    --color-overlay:     rgba(0, 0, 0, 0.60);
+    --color-nav-bg:      #e8e2dc;
+    --color-bg-img-opacity: 0.06;
+}
+
+/* ========================
+   ======================== */
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+.bg-img-overlay {
+    opacity: var(--color-bg-img-opacity);
+}
+
+.nav-bar {
+    background: var(--color-nav-bg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-menu-panel {
+    background: var(--color-nav-bg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.tab-btn {
+    color: var(--color-muted);
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+.tab-btn:hover { color: var(--color-text); }
+.tab-btn.active {
+    color: var(--color-text);
+    border-bottom-color: var(--color-accent);
+}
+
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+}
+
+.card-inner {
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+}
+
+.page-title {
+    color: var(--color-accent);
+    font-family: 'Upheaval', sans-serif;
+}
+
+.section-title {
+    color: var(--color-accent);
+    font-family: 'Upheaval', sans-serif;
+}
+
+.color-accent { color: var(--color-accent); }
+.color-muted  { color: var(--color-muted); }
+
+.btn {
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+}
+.btn:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: var(--color-accent);
+    border: 1px solid var(--color-accent-dark);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+}
+.btn-primary:hover {
+    background: var(--color-accent-dark);
+    transform: translateY(-1px);
+}
+
+.btn-cancel {
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-muted);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+}
+.btn-cancel:hover {
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+.input-field {
+    background: var(--color-input-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color 0.15s;
+}
+.input-field:focus {
+    border-color: var(--color-accent);
+}
+
+.modal-overlay {
+    background: var(--color-overlay);
+}
+
+.modal-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+}
+
+.stat-row {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.error-box {
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+    color: var(--color-accent);
+}
+
+.upload-label {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+}
+.upload-label:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+}
+
+.theme-switcher {
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-muted);
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.375rem;
+    transition: color 0.15s, border-color 0.15s;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.theme-switcher:hover {
+    color: var(--color-text);
+    border-color: var(--color-accent);
 }
