@@ -65,3 +65,6 @@ This project is **not affiliated with**, **sponsored by**, or **endorsed by** th
 
 Information about save structure was collected from public GitHub projects and personal reverse-engineering (notably bestiary, statistics, sins, etc.).  
 Sprites are taken from the [official Binding of Isaac wiki](https://bindingofisaacrebirth.wiki.gg/). (Avoid the Fandom one.)
+
+## IA Disclosure
+Only one thing has been made by a LLM and its the current theme. I could create a good one (see isaaconnect for the implementation of good themes. Colors of isaaconnect has been made by biobak, not me). The interface (placements, boxes, etc.) has been made by me though. Only colors, shadows, etc. is created by a LLM.
